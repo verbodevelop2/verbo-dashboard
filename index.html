@@ -380,23 +380,19 @@ function iniciarAutoRefresh() {
    BIGQUERY REST API
    Endpoint: POST https://bigquery.googleapis.com/bigquery/v2/projects/{project}/queries
 ══════════════════════════════════════ */
-async function queryBigQueryCustom() {
+
+  async function queryBigQueryCustom() {
   const device = document.getElementById('sel-device').value;
   const start  = document.getElementById('date-start').value;
   const end    = document.getElementById('date-end').value;
 
-  const resp = await fetch("https://script.google.com/macros/s/AKfycbyA8gd4QCzZpbuCa4MxXQZFn4h8Q33S3RtViyeR179woVRAhW0zVZDZMWbTtj6hSrpA8w/exec", {
-    const params = new URLSearchParams({
-      projectId: BQ.project,
-      datasetId: BQ.dataset,
-      tableId: BQ.table,
-      device: device,
-      startDate: start,
-      endDate: end
-    });
-
-    const resp = await fetch(SCRIPT_URL + "?" + params.toString());
+  const params = new URLSearchParams({
+    device: device,
+    startDate: start,
+    endDate: end
   });
+
+  const resp = await fetch(SCRIPT_URL + "?" + params.toString());
 
   if (!resp.ok) {
     throw new Error("Error HTTP: " + resp.status);
@@ -405,12 +401,12 @@ async function queryBigQueryCustom() {
   const data = await resp.json();
 
   if (!data || data.error) {
-    throw new Error(data?.error || "Respuesta inválida del servidor");
+    throw new Error(data?.error || "Respuesta inválida");
   }
 
   return data;
 }
-
+  
 /* ══════════════════════════════════════
    QUERIES BigQuery — tabla: datos_esp32
    Columnas clave: clave_disp, fecha (DATE), hora (STRING),
