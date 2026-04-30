@@ -400,7 +400,7 @@ async function queryBigQueryCustom() {
 async function cargarDesdeBigQuery() {
   const data = await queryBigQueryCustom();
 
-  console.log("🔥 DATA COMPLETA:", JSON.stringify(data, null, 2));
+  console.log("🔥 DATA COMPLETA:", data);
 
   // 👇 PROTECCIÓN para que no truene
   if (!data || !data.resumen) {
