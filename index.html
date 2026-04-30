@@ -282,7 +282,7 @@
 ══════════════════════════════════════ */
 let BQ = { project:'', dataset:'', table:'datos_esp32', apiKey:'', refreshMin:5 };
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwafQY3CWkf83tMwJu3B1SQYQYBVQhFKymUQP70lOg3oqsdiPLLowqcmF1rpEOSUHg8tw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7dSDjcGjodu31BBvydk9ZAcqUhF_jHrsWNWU7-N4KrpL-oXYc9-_kOSvL8D1o6vPUWQ/exec";
 
 // Escaneos QR manuales por dispositivo
 let qrManual = { '101':0, '102':0, '201':0, '301':0, '302':0, '401':0 };
@@ -385,7 +385,7 @@ async function queryBigQueryCustom() {
   const start  = document.getElementById('date-start').value;
   const end    = document.getElementById('date-end').value;
 
-  const resp = await fetch("https://script.google.com/macros/s/AKfycbwafQY3CWkf83tMwJu3B1SQYQYBVQhFKymUQP70lOg3oqsdiPLLowqcmF1rpEOSUHg8tw/exec", {
+  const resp = await fetch("https://script.google.com/macros/s/AKfycbz7dSDjcGjodu31BBvydk9ZAcqUhF_jHrsWNWU7-N4KrpL-oXYc9-_kOSvL8D1o6vPUWQ/exec", {
   method: "POST",
   headers: {
     "Content-Type": "text/plain"
