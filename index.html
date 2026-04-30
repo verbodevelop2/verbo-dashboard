@@ -414,6 +414,9 @@ async function cargarDesdeBigQuery() {
   const usuarios = parseInt(r.sesiones_usuario) || 0;
   const prodKwh = parseFloat(r.produccion_kwh) || 0;
   const consKwh = parseFloat(r.consumo_kwh) || 0;
+
+  return { usuarios, prodKwh, consKwh, ultimas24h, porDispositivo };
+}
 /* ══════════════════════════════════════
    QUERIES BigQuery — tabla: datos_esp32
    Columnas clave: clave_disp, fecha (DATE), hora (STRING),
