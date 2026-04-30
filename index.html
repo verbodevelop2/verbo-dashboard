@@ -459,25 +459,16 @@ async function cargarDatos() {
 /* ══════════════════════════════════════
    RENDERIZADO CON DATOS REALES
 ══════════════════════════════════════ */
-async function cargarDesdeBigQuery() {
-  const device = document.getElementById('sel-device').value;
-  const start  = document.getElementById('date-start').value;
-  const end    = document.getElementById('date-end').value;
+const params = new URLSearchParams({
+  projectId: BQ.project,
+  datasetId: BQ.dataset,
+  tableId: BQ.table,
+  device: device,
+  startDate: start,
+  endDate: end
+});
 
-  const resp = await fetch(SCRIPT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      projectId: BQ.project,
-      datasetId: BQ.dataset,
-      tableId: BQ.table,
-      device: device,
-      startDate: start,
-      endDate: end
-    })
-  });
+const resp = await fetch(SCRIPT_URL + "?" + params.toString());
 
   const data = await resp.json();
 
