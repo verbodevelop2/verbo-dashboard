@@ -314,7 +314,7 @@ iniciarAutoRefresh();
       document.getElementById('cfg-project').value = BQ.project;
       document.getElementById('cfg-dataset').value = BQ.dataset;
       document.getElementById('cfg-table').value = BQ.table || 'datos_esp32';
-      document.getElementById('cfg-apikey').value = BQ.apiKey;
+
       document.getElementById('cfg-refresh').value = BQ.refreshMin;
       // Restaurar QR manuales
       Object.keys(qrManual).forEach(k => {
@@ -378,7 +378,6 @@ function iniciarAutoRefresh() {
 
 /* ══════════════════════════════════════
    BIGQUERY REST API
-   Endpoint: POST https://bigquery.googleapis.com/bigquery/v2/projects/{project}/queries
 ══════════════════════════════════════ */
 async function queryBigQueryCustom() {
   const device = document.getElementById('sel-device').value;
@@ -392,9 +391,45 @@ async function queryBigQueryCustom() {
   });
 
   const resp = await fetch(SCRIPT_URL + "?" + params.toString());
-
   const data = await resp.json();
   return data;
+}
+
+// 👇 AQUÍ PEGAS ESTO
+async function cargarDesdeBigQuery() {
+  const data = await queryBigQueryCustom();
+
+  console.log("DATA BACKEND:", data);
+
+  if (!data || data.error) {
+    throw new Error(data?.error || "Respuesta inválida del servidor");
+  }
+
+  const r = data.resumen;
+  const ultimas24h = data.ultimas24h;
+  const porDispositivo = data.porDispositivo;
+
+  const usuarios = parseInt(r.sesiones_usuario) || 0;
+  const prodKwh = parseFloat(r.produccion_kwh) || 0;
+  const consKwh = parseFloat(r.consumo_kwh) || 0;
+  const eficiencia = prodKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
+
+  renderKpis([
+    {label:'Usuarios conectados', value: usuarios, unit:'', icon:'👤', accent:'#BCCF00'},
+    {label:'Producción', value: prodKwh.toFixed(2), unit:'kWh', icon:'⚡', accent:'#65A428'},
+    {label:'Consumo', value: consKwh.toFixed(2), unit:'kWh', icon:'🔋', accent:'#BCCF00'},
+    {label:'Eficiencia', value: eficiencia, unit:'%', icon:'📊', accent:'#65A428'}
+  ], 'kpi-grid');
+
+  const horas = ultimas24h.map(r => r.hora);
+  const batData = ultimas24h.map(r => parseFloat(r.avg_bat)||0);
+
+  renderLineChart('chart-voltage', horas, [
+    {label:'Voltaje', data:batData, color:'#BCCF00'}
+  ]);
+
+  renderTablaDispositivos(porDispositivo);
+  renderStatusCards(porDispositivo);
 }
 /* ══════════════════════════════════════
    QUERIES BigQuery — tabla: datos_esp32
@@ -441,50 +476,6 @@ async function cargarDatos() {
   }
 }
 
-/* ══════════════════════════════════════
-   RENDERIZADO CON DATOS REALES
-══════════════════════════════════════ */
-  const data = await resp.json();
-
-  console.log("DATA BACKEND:", data);
-
-  // 🔹 VALIDACIÓN
-  if (!data || data.error) {
-    throw new Error(data?.error || "Respuesta inválida del servidor");
-  }
-
-  const r = data.resumen;
-  const ultimas24h = data.ultimas24h;
-  const porDispositivo = data.porDispositivo;
-
-  const qrTotal = getQrManualTotal();
-  const usuarios = parseInt(r.sesiones_usuario) || 0;
-  const respTotal = usuarios;
-
-  const prodKwh = parseFloat(r.produccion_kwh) || 0;
-  const consKwh = parseFloat(r.consumo_kwh) || 0;
-  const eficiencia = prodKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
-
-  // KPIs
-  renderKpis([
-    {label:'Usuarios conectados', value: usuarios, unit:'', icon:'👤', accent:'#BCCF00'},
-    {label:'Producción', value: prodKwh.toFixed(2), unit:'kWh', icon:'⚡', accent:'#65A428'},
-    {label:'Consumo', value: consKwh.toFixed(2), unit:'kWh', icon:'🔋', accent:'#BCCF00'},
-    {label:'Eficiencia', value: eficiencia, unit:'%', icon:'📊', accent:'#65A428'}
-  ], 'kpi-grid');
-
-  // 📊 GRÁFICAS 24h
-  const horas = ultimas24h.map(r => r.hora);
-  const batData = ultimas24h.map(r => parseFloat(r.avg_bat)||0);
-
-  renderLineChart('chart-voltage', horas, [
-    {label:'Voltaje', data:batData, color:'#BCCF00'}
-  ]);
-
-  // Tabla + status
-  renderTablaDispositivos(porDispositivo);
-  renderStatusCards(porDispositivo);
-}
 
 /* ══════════════════════════════════════
    MODO DEMO (datos simulados)
