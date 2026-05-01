@@ -410,8 +410,14 @@ async function cargarDesdeBigQuery() {
   // Extraer datos del backend
   const r = data.resumen;
   const ultimas24h = data.ultimas24h || [];
-  const porDispositivo = data.porDispositivo || [];
-
+  //const porDispositivo = data.porDispositivo || [];
+  const selectedDevice = document.getElementById('sel-device').value;
+  let porDispositivo = data.porDispositivo || [];
+  // 👇 FILTRO
+  if (selectedDevice !== 'Todos') {
+    porDispositivo = porDispositivo.filter(d => d.device_id === selectedDevice);
+  }
+  
   // KPIs principales
   const usuarios = parseInt(r.sesiones_usuario) || 0;
   const prodKwh  = parseFloat(r.produccion_kwh) || 0;
