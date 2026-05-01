@@ -400,23 +400,39 @@ async function queryBigQueryCustom() {
 async function cargarDesdeBigQuery() {
   const data = await queryBigQueryCustom();
 
-  console.log("🔥 DATA COMPLETA:", data);
+  console.log("🔥 DATA COMPLETA:", JSON.stringify(data, null, 2));
 
-  // 👇 PROTECCIÓN para que no truene
+  // Validación básica
   if (!data || !data.resumen) {
     throw new Error("El backend no devolvió 'resumen'. Revisa Apps Script.");
   }
 
+  // Extraer datos del backend
   const r = data.resumen;
   const ultimas24h = data.ultimas24h || [];
   const porDispositivo = data.porDispositivo || [];
 
+  // KPIs principales
   const usuarios = parseInt(r.sesiones_usuario) || 0;
-  const prodKwh = parseFloat(r.produccion_kwh) || 0;
-  const consKwh = parseFloat(r.consumo_kwh) || 0;
+  const prodKwh  = parseFloat(r.produccion_kwh) || 0;
+  const consKwh  = parseFloat(r.consumo_kwh) || 0;
 
-  return { usuarios, prodKwh, consKwh, ultimas24h, porDispositivo };
-}
+  console.log("Usuarios:", usuarios);
+  console.log("Producción:", prodKwh);
+  console.log("Consumo:", consKwh);
+
+  // 👇 EJEMPLO BÁSICO PARA QUE YA VEAS ALGO EN PANTALLA
+  renderKpis([
+    {label:'Usuarios conectados', value:usuarios, unit:'usuarios', icon:'👤', accent:'#65A428'},
+    {label:'Producción energética', value:prodKwh.toFixed(2), unit:'kWh', icon:'⚡', accent:'#BCCF00'},
+    {label:'Consumo energético', value:consKwh.toFixed(2), unit:'kWh', icon:'🔋', accent:'#65A428'},
+  ], 'kpi-grid');
+
+  // 👇 DEBUG adicional
+  console.log("Ultimas 24h:", ultimas24h);
+  console.log("Por dispositivo:", porDispositivo);
+
+} 
 /* ══════════════════════════════════════
    QUERIES BigQuery — tabla: datos_esp32
    Columnas clave: clave_disp, fecha (DATE), hora (STRING),
