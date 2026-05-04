@@ -103,7 +103,7 @@
 <!-- ══════════════════════════════════════════
      PANEL DE CONFIGURACIÓN BigQuery
 ══════════════════════════════════════════ -->
-<div class="config-overlay" id="config-overlay" style="display:none;">
+<div class="config-overlay" id="config-overlay">
   <div class="config-box">
     <div class="config-title">Configuración de conexión</div>
     <div class="config-subtitle">Google BigQuery — Verbo Tech</div>
@@ -139,7 +139,8 @@
 
     <hr class="cfg-sep">
 
-    
+    <label class="cfg-label">API Key de Google (para BigQuery REST API)</label>
+    <input class="cfg-input" id="cfg-apikey" type="password" placeholder="AIza..." autocomplete="off">
     <p class="cfg-note">
       Obtén tu API Key en: <strong>console.cloud.google.com</strong> → APIs &amp; Services → Credentials.<br>
       Activa la API de BigQuery en tu proyecto. La key debe tener permisos de <em>BigQuery Data Viewer</em>.
@@ -281,9 +282,6 @@
    ESTADO GLOBAL
 ══════════════════════════════════════ */
 let BQ = { project:'', dataset:'', table:'datos_esp32', apiKey:'', refreshMin:5 };
-
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNwUSwbNlS6wdec4G3w27GSQhdOCIAsI6ZtxSCjrHWxO5BSyxF1PuC0YZ4dBsFVt0eTA/exec";
-
 // Escaneos QR manuales por dispositivo
 let qrManual = { '101':0, '102':0, '201':0, '301':0, '302':0, '401':0 };
 let modoDemo = false;
@@ -300,10 +298,6 @@ window.onload = () => {
   document.getElementById('date-end').value = hoy.toISOString().split('T')[0];
   document.getElementById('date-start').value = hace30.toISOString().split('T')[0];
 
-document.getElementById('dashboard').style.display = 'block';
-cargarDatos();
-iniciarAutoRefresh();
-
   // Si hay configuración guardada, cargarla
   const saved = localStorage.getItem('vt_bq_config');
   if (saved) {
@@ -314,7 +308,7 @@ iniciarAutoRefresh();
       document.getElementById('cfg-project').value = BQ.project;
       document.getElementById('cfg-dataset').value = BQ.dataset;
       document.getElementById('cfg-table').value = BQ.table || 'datos_esp32';
-
+      document.getElementById('cfg-apikey').value = BQ.apiKey;
       document.getElementById('cfg-refresh').value = BQ.refreshMin;
       // Restaurar QR manuales
       Object.keys(qrManual).forEach(k => {
@@ -339,6 +333,7 @@ function conectarBigQuery() {
   BQ.project   = document.getElementById('cfg-project').value.trim();
   BQ.dataset   = document.getElementById('cfg-dataset').value.trim();
   BQ.table     = document.getElementById('cfg-table').value.trim() || 'datos_esp32';
+  BQ.apiKey    = document.getElementById('cfg-apikey').value.trim();
   BQ.refreshMin = parseInt(document.getElementById('cfg-refresh').value) || 5;
 
   // Leer escaneos QR manuales
@@ -346,7 +341,12 @@ function conectarBigQuery() {
     qrManual[k] = parseInt(document.getElementById('qr-'+k).value) || 0;
   });
 
-  
+  if (!BQ.project || !BQ.dataset || !BQ.apiKey) {
+    err.textContent = 'Por favor completa: Project ID, Dataset ID y API Key.';
+    err.style.display = 'block';
+    return;
+  }
+
   localStorage.setItem('vt_bq_config', JSON.stringify({ bq: BQ, qrManual }));
 
   modoDemo = false;
@@ -378,67 +378,27 @@ function iniciarAutoRefresh() {
 
 /* ══════════════════════════════════════
    BIGQUERY REST API
+   Endpoint: POST https://bigquery.googleapis.com/bigquery/v2/projects/{project}/queries
 ══════════════════════════════════════ */
-async function queryBigQueryCustom() {
-  const device = document.getElementById('sel-device').value;
-  const start  = document.getElementById('date-start').value;
-  const end    = document.getElementById('date-end').value;
-
-  const params = new URLSearchParams({
-    device: device,
-    startDate: start,
-    endDate: end
+async function queryBigQuery(sql) {
+  const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${BQ.project}/queries?key=${BQ.apiKey}`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: sql, useLegacySql: false, timeoutMs: 30000 })
   });
-
-  const resp = await fetch(SCRIPT_URL + "?" + params.toString());
+  if (!resp.ok) {
+    const e = await resp.json();
+    throw new Error(e.error?.message || `HTTP ${resp.status}`);
+  }
   const data = await resp.json();
-  return data;
+  // Convertir filas a objetos
+  const fields = data.schema?.fields?.map(f => f.name) || [];
+  return (data.rows || []).map(row =>
+    Object.fromEntries(fields.map((f, i) => [f, row.f[i]?.v ?? null]))
+  );
 }
 
-// 👇 AQUÍ PEGAS ESTO
-
-async function cargarDesdeBigQuery() {
-  const data = await queryBigQueryCustom();
-
-  console.log("🔥 DATA COMPLETA:", JSON.stringify(data, null, 2));
-
-  // Validación básica
-  if (!data || !data.resumen) {
-    throw new Error("El backend no devolvió 'resumen'. Revisa Apps Script.");
-  }
-
-  // Extraer datos del backend
-  const r = data.resumen;
-  const ultimas24h = data.ultimas24h || [];
-  //const porDispositivo = data.porDispositivo || [];
-  const selectedDevice = document.getElementById('sel-device').value;
-  let porDispositivo = data.porDispositivo || [];
-  // 👇 FILTRO
-  if (selectedDevice !== 'Todos') {
-    porDispositivo = porDispositivo.filter(d => d.device_id === selectedDevice);
-  }
-  
-  // KPIs principales
-  const usuarios = parseInt(r.sesiones_usuario) || 0;
-  const prodKwh  = parseFloat(r.produccion_kwh) || 0;
-  const consKwh  = parseFloat(r.consumo_kwh) || 0;
-
-  console.log("Usuarios:", usuarios);
-  console.log("Producción:", prodKwh);
-  console.log("Consumo:", consKwh);
-
-  // 👇 EJEMPLO BÁSICO PARA QUE YA VEAS ALGO EN PANTALLA
-  renderKpis([
-    {label:'Usuarios conectados', value:usuarios, unit:'usuarios', icon:'👤', accent:'#65A428'},
-    {label:'Producción energética', value:prodKwh.toFixed(2), unit:'kWh', icon:'⚡', accent:'#BCCF00'},
-    {label:'Consumo energético', value:consKwh.toFixed(2), unit:'kWh', icon:'🔋', accent:'#65A428'},
-  ], 'kpi-grid');
-
-  // 👇 DEBUG adicional
-  console.log("Ultimas 24h:", ultimas24h);
-  console.log("Por dispositivo:", porDispositivo);
-
-} 
 /* ══════════════════════════════════════
    QUERIES BigQuery — tabla: datos_esp32
    Columnas clave: clave_disp, fecha (DATE), hora (STRING),
@@ -456,6 +416,86 @@ function getQrManualTotal() {
   const d = document.getElementById('sel-device').value;
   if (d === 'Todos') return Object.values(qrManual).reduce((a,b)=>a+b, 0);
   return qrManual[d] || 0;
+}
+
+function getSQLResumen() {
+  const inicio = document.getElementById('date-start').value;
+  const fin    = document.getElementById('date-end').value;
+  const df = getDeviceFilter('t');
+  return `
+    SELECT
+      COUNT(*) AS total_registros,
+      ROUND(AVG(voltaje_bateria), 2)   AS avg_voltaje_bat,
+      ROUND(AVG(voltaje_panel), 2)     AS avg_voltaje_panel,
+      ROUND(AVG(corriente_total), 2)   AS avg_corriente,
+      ROUND(AVG(temperatura), 1)       AS avg_temp,
+      ROUND(AVG(humedad), 1)           AS avg_humedad,
+      ROUND(SUM(voltaje_panel * corriente_cargador) / 3600.0, 3) AS produccion_kwh,
+      ROUND(SUM(voltaje_bateria * corriente_total)  / 3600.0, 3) AS consumo_kwh,
+      COUNTIF(usuario_cargando = TRUE)  AS sesiones_usuario,
+      ROUND(MIN(voltaje_bateria), 2)    AS min_bat,
+      ROUND(MAX(voltaje_bateria), 2)    AS max_bat
+    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\` t
+    WHERE t.fecha BETWEEN '${inicio}' AND '${fin}'
+    ${df}
+  `;
+}
+
+function getSQLPorDispositivo() {
+  const inicio = document.getElementById('date-start').value;
+  const fin    = document.getElementById('date-end').value;
+  return `
+    SELECT
+      clave_disp AS device_id,
+      ROUND(AVG(voltaje_bateria), 1)   AS avg_bat,
+      ROUND(SUM(voltaje_panel * corriente_cargador) / 3600.0, 2) AS prod_kwh,
+      ROUND(SUM(voltaje_bateria * corriente_total)  / 3600.0, 2) AS cons_kwh,
+      COUNTIF(usuario_cargando = TRUE)  AS usuarios,
+      ROUND(
+        SAFE_DIVIDE(AVG(voltaje_bateria) - 10.5, 12.6 - 10.5) * 100
+      , 0) AS bat_pct
+    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\`
+    WHERE fecha BETWEEN '${inicio}' AND '${fin}'
+    GROUP BY clave_disp
+    ORDER BY clave_disp
+  `;
+}
+
+// Timeline diaria: usuarios conectados por día (= respuestas registradas)
+function getSQLTimeline() {
+  const inicio = document.getElementById('date-start').value;
+  const fin    = document.getElementById('date-end').value;
+  const df = getDeviceFilter('t');
+  return `
+    SELECT
+      fecha AS dia,
+      COUNTIF(usuario_cargando = TRUE) AS usuarios_dia
+    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\` t
+    WHERE t.fecha BETWEEN '${inicio}' AND '${fin}'
+    ${df}
+    GROUP BY fecha
+    ORDER BY fecha
+  `;
+}
+
+// Últimas 24h agrupadas por hora usando campo hora STRING
+function getSQLUltimas24h() {
+  const df = getDeviceFilter('t');
+  return `
+    SELECT
+      SUBSTR(hora, 1, 5) AS hora_str,
+      ROUND(AVG(voltaje_bateria), 2)   AS avg_bat,
+      ROUND(AVG(temperatura), 1)       AS avg_temp,
+      ROUND(AVG(humedad), 1)           AS avg_hum,
+      ROUND(SUM(voltaje_panel * corriente_cargador) / 3600.0, 4) AS prod_kwh,
+      ROUND(SUM(voltaje_bateria * corriente_total)  / 3600.0, 4) AS cons_kwh,
+      COUNTIF(usuario_cargando = TRUE)  AS usuarios_hora
+    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\` t
+    WHERE t.fecha = CURRENT_DATE()
+    ${df}
+    GROUP BY hora_str
+    ORDER BY hora_str
+  `;
 }
 
 /* ══════════════════════════════════════
@@ -484,6 +524,108 @@ async function cargarDatos() {
   }
 }
 
+/* ══════════════════════════════════════
+   RENDERIZADO CON DATOS REALES
+══════════════════════════════════════ */
+async function cargarDesdeBigQuery() {
+  // Lanzar queries en paralelo
+  const [resumen, porDev, ultimas24h] = await Promise.all([
+    queryBigQuery(getSQLResumen()),
+    queryBigQuery(getSQLPorDispositivo()),
+    queryBigQuery(getSQLUltimas24h()),
+  ]);
+
+  // Escaneos (tabla separada, opcional)
+  let escaneosTotal = {total_qr:'N/D', total_resp:'N/D'};
+  let escaneosTimeline = [];
+  const sqlEs = getSQLEscaneos();
+  const sqlEsT = getSQLEscaneosTotal();
+  if (sqlEs && sqlEsT) {
+    try {
+      const [et, etl] = await Promise.all([
+        queryBigQuery(sqlEsT),
+        queryBigQuery(sqlEs)
+      ]);
+      if (et.length) escaneosTotal = et[0];
+      escaneosTimeline = etl;
+    } catch(e) { console.warn('Sin tabla QR:', e.message); }
+  }
+
+  const r = resumen[0] || {};
+  const qrTotal = parseInt(escaneosTotal.total_qr) || 0;
+  const respTotal = parseInt(escaneosTotal.total_resp) || 0;
+  const usuarios = parseInt(r.sesiones_usuario) || 0;
+  const prodKwh = parseFloat(r.produccion_kwh) || 0;
+  const consKwh = parseFloat(r.consumo_kwh) || 0;
+  const eficiencia = consKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
+
+  // KPIs principales
+  const inicio = document.getElementById('date-start').value.split('-').reverse().join('/');
+  const fin = document.getElementById('date-end').value.split('-').reverse().join('/');
+  const dev = document.getElementById('sel-device').value;
+
+  renderKpis([
+    {label:'Número de dispositivo', value: dev, unit:'', icon:'📡', accent:'#65A428'},
+    {label:'Escaneos QR', value: qrTotal.toLocaleString(), unit:'total en periodo', icon:'⬛', accent:'#BCCF00'},
+    {label:'Respuestas registradas', value: respTotal.toLocaleString(), unit:'total en periodo', icon:'📋', accent:'#65A428'},
+    {label:'Usuarios conectados', value: usuarios.toLocaleString(), unit:'cargador > 0.3A', icon:'👤', accent:'#BCCF00'},
+    {label:'Fecha inicio periodo', value: inicio, unit:'', icon:'📅', accent:'#65A428'},
+    {label:'Fecha fin periodo', value: fin, unit:'', icon:'📅', accent:'#BCCF00'},
+    {label:'Producción energética', value: prodKwh.toFixed(2), unit:'kWh', icon:'⚡', accent:'#BCCF00'},
+    {label:'Consumo energético', value: consKwh.toFixed(2), unit:'kWh', icon:'🔋', accent:'#65A428'},
+  ], 'kpi-grid');
+
+  // KPIs adicionales
+  const tasaQR = qrTotal > 0 ? ((respTotal/qrTotal)*100).toFixed(1) : '—';
+  const tasaUser = qrTotal > 0 ? ((usuarios/qrTotal)*100).toFixed(1) : '—';
+  renderKpis([
+    {label:'Rendimiento energético', value: eficiencia+'', unit:'% producción/consumo', icon:'📊', accent:'#BCCF00'},
+    {label:'Tasa conversión QR→Resp.', value: tasaQR+'', unit:'%', icon:'🔄', accent:'#65A428'},
+    {label:'Tasa conexión usuario', value: tasaUser+'', unit:'% usuarios/escaneos', icon:'📶', accent:'#BCCF00'},
+    {label:'Voltaje promedio batería', value: r.avg_voltaje_bat||'—', unit:'V', icon:'🔋', accent:'#65A428'},
+    {label:'Voltaje promedio panel', value: r.avg_voltaje_panel||'—', unit:'V', icon:'☀️', accent:'#BCCF00'},
+    {label:'Temperatura promedio', value: r.avg_temp||'—', unit:'°C', icon:'🌡️', accent:'#65A428'},
+    {label:'Humedad promedio', value: r.avg_humedad||'—', unit:'%', icon:'💧', accent:'#BCCF00'},
+    {label:'Corriente promedio', value: r.avg_corriente||'—', unit:'A', icon:'⚡', accent:'#65A428'},
+  ], 'kpi-extra');
+
+  // Gráficas timeline escaneos/respuestas
+  const labelsQR = escaneosTimeline.map(r => r.dia);
+  const dataQR   = escaneosTimeline.map(r => parseInt(r.escaneos)||0);
+  const dataResp = escaneosTimeline.map(r => parseInt(r.respuestas)||0);
+  const dataUsers = dataResp.map(v => Math.round(v * 0.75)); // estimado si no hay col separada
+
+  renderBarChart('chart-qr', labelsQR, [
+    {label:'Escaneos QR', data:dataQR, bg:'#BCCF00'},
+    {label:'Respuestas', data:dataResp, bg:'#65A428'},
+  ]);
+
+  renderLineChart('chart-users', labelsQR, [
+    {label:'Respuestas', data:dataResp, color:'#65A428', dash:[4,4]},
+    {label:'Usuarios', data:dataUsers, color:'#3ea8c8', dash:[]},
+  ]);
+
+  // 24h
+  const horas = ultimas24h.map(r => r.hora);
+  const batData = ultimas24h.map(r => parseFloat(r.avg_bat)||0);
+  const tempData = ultimas24h.map(r => parseFloat(r.avg_temp)||0);
+  const humData  = ultimas24h.map(r => parseFloat(r.avg_hum)||0);
+  const prod24 = ultimas24h.map(r => parseFloat(r.prod_kwh)||0);
+  const cons24 = ultimas24h.map(r => parseFloat(r.cons_kwh)||0);
+
+  renderLineChart('chart-voltage', horas, [
+    {label:'Voltaje V', data:batData, color:'#BCCF00', dash:[]},
+  ]);
+  renderBarChart('chart-energy', horas, [
+    {label:'Producción kWh', data:prod24, bg:'#BCCF00'},
+    {label:'Consumo kWh', data:cons24, bg:'#e87040'},
+  ]);
+  renderDualAxis('chart-ambience', horas, tempData, humData);
+
+  // Tabla por dispositivo
+  renderTablaDispositivos(porDev);
+  renderStatusCards(porDev);
+}
 
 /* ══════════════════════════════════════
    MODO DEMO (datos simulados)
