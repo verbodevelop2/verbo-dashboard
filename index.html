@@ -130,19 +130,67 @@
 
     <hr class="cfg-sep">
 
-    <label class="cfg-lbl">Escaneos QR — ingreso manual por dispositivo</label>
-    <p class="cfg-note" style="margin-bottom:.6rem;">Total de escaneos QR en el periodo seleccionado. Aparecerá en KPIs, tabla y gráficas. Las <b>Respuestas registradas</b> tomarán el mismo valor automáticamente.</p>
-    <div class="cfg-2col">
-      <div><label class="cfg-lbl" style="font-size:10px;">Dispositivo 101</label><input class="cfg-inp" id="qr-101" type="number" placeholder="0" min="0"></div>
-      <div><label class="cfg-lbl" style="font-size:10px;">Dispositivo 102</label><input class="cfg-inp" id="qr-102" type="number" placeholder="0" min="0"></div>
-    </div>
-    <div class="cfg-2col">
-      <div><label class="cfg-lbl" style="font-size:10px;">Dispositivo 201</label><input class="cfg-inp" id="qr-201" type="number" placeholder="0" min="0"></div>
-      <div><label class="cfg-lbl" style="font-size:10px;">Dispositivo 301</label><input class="cfg-inp" id="qr-301" type="number" placeholder="0" min="0"></div>
-    </div>
-    <div class="cfg-2col">
-      <div><label class="cfg-lbl" style="font-size:10px;">Dispositivo 302</label><input class="cfg-inp" id="qr-302" type="number" placeholder="0" min="0"></div>
-      <div><label class="cfg-lbl" style="font-size:10px;">Dispositivo 401</label><input class="cfg-inp" id="qr-401" type="number" placeholder="0" min="0"></div>
+    <label class="cfg-lbl">Configuración de unidades</label>
+<p class="cfg-note" style="margin-bottom:.6rem;">
+Asignación de métricas y parámetros operativos por dispositivo.
+Los valores configurados se integrarán automáticamente en los indicadores,
+gráficas y reportes del dashboard.
+</p>
+
+<div class="cfg-2col">
+  <div>
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 101 — QR</label>
+    <input class="cfg-inp" id="qr-101" type="number" placeholder="0" min="0">
+
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 101 — Respuestas</label>
+    <input class="cfg-inp" id="resp-101" type="number" placeholder="0" min="0">
+  </div>
+
+  <div>
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 102 — QR</label>
+    <input class="cfg-inp" id="qr-102" type="number" placeholder="0" min="0">
+
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 102 — Respuestas</label>
+    <input class="cfg-inp" id="resp-102" type="number" placeholder="0" min="0">
+  </div>
+</div>
+
+<div class="cfg-2col">
+  <div>
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 201 — QR</label>
+    <input class="cfg-inp" id="qr-201" type="number" placeholder="0" min="0">
+
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 201 — Respuestas</label>
+    <input class="cfg-inp" id="resp-201" type="number" placeholder="0" min="0">
+  </div>
+
+  <div>
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 301 — QR</label>
+    <input class="cfg-inp" id="qr-301" type="number" placeholder="0" min="0">
+
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 301 — Respuestas</label>
+    <input class="cfg-inp" id="resp-301" type="number" placeholder="0" min="0">
+  </div>
+</div>
+
+<div class="cfg-2col">
+  <div>
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 302 — QR</label>
+    <input class="cfg-inp" id="qr-302" type="number" placeholder="0" min="0">
+
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 302 — Respuestas</label>
+    <input class="cfg-inp" id="resp-302" type="number" placeholder="0" min="0">
+  </div>
+
+  <div>
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 401 — QR</label>
+    <input class="cfg-inp" id="qr-401" type="number" placeholder="0" min="0">
+
+    <label class="cfg-lbl" style="font-size:10px;">Unidad 401 — Respuestas</label>
+    <input class="cfg-inp" id="resp-401" type="number" placeholder="0" min="0">
+  </div>
+</div>    
+
     </div>
 
     <hr class="cfg-sep">
@@ -222,7 +270,7 @@
         <div class="ct">Escaneos QR vs Respuestas registradas (por día)</div>
         <div class="cw"><canvas id="c-qr"></canvas></div>
         <div class="legend">
-          <span class="leg-item"><span class="leg-dot" style="background:#BCCF00;"></span>Escaneos QR (manual)</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#BCCF00;"></span>Escaneos QR</span>
           <span class="leg-item"><span class="leg-dot" style="background:#65A428;"></span>Respuestas registradas</span>
         </div>
       </div>
@@ -303,7 +351,15 @@
 ═══════════════════════════════════════════════ */
 const DEVS = ['101','102','201','301','302','401'];
 let URL_AS  = '';                       // URL del Apps Script
-let qrMap   = {};  DEVS.forEach(d => qrMap[d] = 0);  // QR manuales
+
+let qrMap   = {};
+let respMap = {};
+
+DEVS.forEach(d => {
+  qrMap[d] = 0;
+  respMap[d] = 0;
+});
+
 let refMin  = 5;
 let isDemo  = false;
 let charts  = {};
@@ -324,9 +380,20 @@ window.onload = () => {
       const c = JSON.parse(saved);
       URL_AS = c.url || ''; refMin = c.min || 5;
       if (c.qr) Object.assign(qrMap, c.qr);
+
+	if (c.resp) Object.assign(respMap, c.resp);
+
       document.getElementById('cfg-url').value = URL_AS;
       document.getElementById('cfg-min').value = refMin;
-      DEVS.forEach(k => { const el = document.getElementById('qr-'+k); if(el) el.value = qrMap[k]||''; });
+
+	DEVS.forEach(k => {
+  const qrEl = document.getElementById('qr-'+k);
+  const rpEl = document.getElementById('resp-'+k);
+
+  if(qrEl) qrEl.value = qrMap[k] || '';
+  if(rpEl) rpEl.value = respMap[k] || '';
+});
+
       if (URL_AS) { isDemo=false; showDash('BigQuery','src-live'); cargar(); startTimer(); return; }
     } catch(e){}
   }
@@ -345,9 +412,16 @@ function conectar() {
   err.style.display = 'none';
   URL_AS = document.getElementById('cfg-url').value.trim();
   refMin = parseInt(document.getElementById('cfg-min').value)||5;
-  DEVS.forEach(k => qrMap[k] = parseInt(document.getElementById('qr-'+k).value)||0);
+
+	DEVS.forEach(k => {
+  qrMap[k] = parseInt(document.getElementById('qr-'+k).value) || 0;
+  respMap[k] = parseInt(document.getElementById('resp-'+k).value) || 0;
+});
+
   if (!URL_AS) { err.textContent='Ingresa la URL del Apps Script.'; err.style.display='block'; return; }
-  localStorage.setItem('vt_cfg2', JSON.stringify({url:URL_AS, min:refMin, qr:qrMap}));
+
+localStorage.setItem('vt_cfg2', JSON.stringify({url: URL_AS,  min: refMin,  qr: qrMap,  resp: respMap}));
+
   isDemo = false;
   document.getElementById('cfg-overlay').style.display = 'none';
   showDash('BigQuery','src-live');
@@ -425,11 +499,14 @@ function renderTodo(data, dev, start, end) {
   const consKwh   = parseFloat(r.consumo_kwh)    || 0;
   const efic      = prodKwh > 0 ? Math.round(consKwh/prodKwh*100) : 0;
 
-  /* ── QR manuales para el dispositivo seleccionado ── */
+  /* ── métricas configuradas para el dispositivo seleccionado ── */
   const qrTotal = dev === 'Todos'
     ? DEVS.reduce((s,k) => s+(qrMap[k]||0), 0)
     : (qrMap[dev]||0);
-  const respTotal = usuarios;   // Respuestas = Usuarios conectados
+
+	const respTotal = dev === 'Todos'
+  ? DEVS.reduce((s,k) => s + (respMap[k] || 0), 0)
+  : (respMap[dev] || 0);
 
   const iniStr = start.split('-').reverse().join('/');
   const finStr = end.split('-').reverse().join('/');
@@ -437,13 +514,13 @@ function renderTodo(data, dev, start, end) {
   /* ── 8 KPIs principales ── */
   setKpis('kpi-main', [
     { lbl:'Número de dispositivo',  val: dev,                        unit:'',                           ico:'📡', ac:'#65A428' },
-    { lbl:'Escaneos QR',            val: qrTotal.toLocaleString(),   unit:'total en periodo (manual)',  ico:'⬛', ac:'#BCCF00' },
+    { lbl:'Escaneos QR',            val: qrTotal.toLocaleString(),   unit:'total en periodo ',          ico:'⬛', ac:'#BCCF00' },
     { lbl:'Respuestas registradas', val: respTotal.toLocaleString(), unit:'= usuarios conectados',      ico:'📋', ac:'#65A428' },
     { lbl:'Usuarios conectados',    val: usuarios.toLocaleString(),  unit:'veces que supera 0.4 A',     ico:'👤', ac:'#BCCF00' },
     { lbl:'Fecha inicio periodo',   val: iniStr,                     unit:'',                           ico:'📅', ac:'#65A428' },
     { lbl:'Fecha fin periodo',      val: finStr,                     unit:'',                           ico:'📅', ac:'#BCCF00' },
-    { lbl:'Producción energética',  val: prodKwh.toFixed(4),        unit:'kWh',                        ico:'⚡', ac:'#BCCF00' },
-    { lbl:'Consumo energético',     val: consKwh.toFixed(4),        unit:'kWh',                        ico:'🔋', ac:'#65A428' },
+    { lbl:'Producción energética',  val: prodKwh.toFixed(4),        unit:'kWh',                         ico:'⚡', ac:'#BCCF00' },
+    { lbl:'Consumo energético',     val: consKwh.toFixed(4),        unit:'kWh',                         ico:'🔋', ac:'#65A428' },
   ]);
 
   /* ── KPIs adicionales ── */
@@ -499,7 +576,8 @@ function renderTodo(data, dev, start, end) {
   const pdEnriq = pd.map(d => ({
     ...d,
     qr:   qrMap[d.device_id] || 0,
-    resp: parseInt(d.usuarios) || 0,   // respuestas = usuarios
+	resp: respMap[d.device_id] || 0,
+
   }));
 
   // Si se filtra por dispositivo, mostrar sólo ese
@@ -533,7 +611,7 @@ function renderDemo() {
 
   setKpis('kpi-main',[
     {lbl:'Número de dispositivo',  val:dev,                       unit:'',                          ico:'📡',ac:'#65A428'},
-    {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),  unit:'total en periodo (manual)', ico:'⬛',ac:'#BCCF00'},
+    {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),  unit:'total en periodo', ico:'⬛',ac:'#BCCF00'},
     {lbl:'Respuestas registradas', val:usuarios.toLocaleString(), unit:'= usuarios conectados',     ico:'📋',ac:'#65A428'},
     {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(), unit:'veces que supera 0.4 A',    ico:'👤',ac:'#BCCF00'},
     {lbl:'Fecha inicio periodo',   val:start.split('-').reverse().join('/'), unit:'',ico:'📅',ac:'#65A428'},
