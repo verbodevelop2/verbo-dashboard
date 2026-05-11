@@ -9,8 +9,8 @@
     *{box-sizing:border-box;margin:0;padding:0;}
     body,html{background:#10312B;font-family:'Inter',sans-serif;}
 
-    /* ── CONFIG PANEL ── */
-    .config-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;}
+    /* CONFIG */
+    .config-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;display:flex;align-items:center;justify-content:center;}
     .config-box{background:#0d2922;border:2px solid #65A428;border-radius:14px;padding:2rem;width:min(480px,92vw);max-height:90vh;overflow-y:auto;}
     .config-title{font-size:16px;font-weight:700;color:#BCCF00;margin-bottom:.3rem;}
     .config-subtitle{font-size:11px;color:#65A428;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.4rem;}
@@ -20,19 +20,19 @@
     .cfg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     .cfg-note{font-size:11px;color:#5a8a70;margin-top:-6px;margin-bottom:1rem;line-height:1.5;}
     .cfg-sep{border:none;border-top:1px solid #1e4a38;margin:1rem 0;}
-    .btn-connect{width:100%;background:#65A428;color:#10312B;font-size:13px;font-weight:700;padding:10px;border:none;border-radius:8px;cursor:pointer;letter-spacing:1px;}
+    .btn-connect{width:100%;background:#65A428;color:#10312B;font-size:13px;font-weight:700;padding:10px;border:none;border-radius:8px;cursor:pointer;letter-spacing:1px;margin-top:.4rem;}
     .btn-connect:hover{background:#BCCF00;}
     .btn-demo{width:100%;background:transparent;color:#65A428;font-size:12px;padding:8px;border:1px solid #65A428;border-radius:8px;cursor:pointer;margin-top:8px;}
     .btn-demo:hover{background:#1a4a3a;}
     .config-error{background:#3a1010;color:#e27070;font-size:11px;padding:8px 12px;border-radius:6px;margin-bottom:1rem;display:none;}
 
-    /* ── DASHBOARD ── */
+    /* DASHBOARD */
     .dash{background:#10312B;min-height:100vh;color:#fff;}
     .header{background:linear-gradient(135deg,#10312B 0%,#1a4a3a 60%,#10312B 100%);border-bottom:2px solid #65A428;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1rem;}
-    .logo-circle{background:transparent;width:70px;height:70px;display:flex;align-items:center;justify-content:center;}
-    .logo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px rgba(188,207,0,0.6));}
+    .logo-circle{background:transparent;width:70px;height:70px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .logo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px rgba(188,207,0,.6));}
     .logo-fallback{width:44px;height:44px;border-radius:50%;background:#65A428;display:flex;align-items:center;justify-content:center;}
-    .header-title{font-size:20px;font-weight:700;color:#FFFFFF;letter-spacing:1px;}
+    .header-title{font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;}
     .header-sub{font-size:12px;color:#65A428;margin-top:2px;letter-spacing:2px;text-transform:uppercase;}
     .header-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
     .live-badge{background:#65A428;color:#10312B;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:1px;display:flex;align-items:center;gap:5px;}
@@ -40,7 +40,11 @@
     @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
     .btn-settings{background:transparent;border:1px solid #65A428;color:#65A428;font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;}
     .btn-settings:hover{background:#1a4a3a;}
+    .source-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:6px;}
+    .source-live{background:#1a4a3a;color:#BCCF00;}
+    .source-demo{background:#2a2a0a;color:#e8b84b;}
 
+    /* FILTROS */
     .filters{background:#0d2922;border-bottom:1px solid #1e4a38;padding:.8rem 1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
     .filter-group{display:flex;align-items:center;gap:6px;}
     .filter-label{font-size:11px;color:#65A428;letter-spacing:1px;text-transform:uppercase;}
@@ -51,25 +55,36 @@
     .btn-refresh:hover{background:#BCCF00;}
     .btn-refresh:disabled{background:#1e4a38;color:#5a8a70;cursor:not-allowed;}
 
+    /* LOADING */
     .loading-bar{height:3px;background:#1e4a38;position:relative;overflow:hidden;display:none;}
     .loading-bar.active{display:block;}
     .loading-bar::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;background:linear-gradient(90deg,transparent,#BCCF00,transparent);animation:loading 1s infinite;}
     @keyframes loading{to{left:140%;}}
 
+    /* MAIN */
     .main{padding:1.2rem 1.5rem;}
     .section-title{font-size:11px;color:#BCCF00;letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem;padding-left:4px;border-left:3px solid #65A428;}
-    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:1.4rem;}
+
+    /* KPI CARDS */
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:1.4rem;}
     .kpi{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;padding:.9rem 1rem;position:relative;overflow:hidden;}
     .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,#65A428);}
     .kpi-label{font-size:10px;color:#65A428;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
     .kpi-value{font-size:22px;font-weight:700;color:#fff;line-height:1;}
     .kpi-unit{font-size:11px;color:#BCCF00;margin-top:3px;}
     .kpi-icon{position:absolute;right:10px;top:10px;font-size:18px;opacity:.5;}
+
+    /* CHARTS */
     .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.4rem;}
     .chart-card{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;padding:1rem;}
     .chart-title{font-size:11px;color:#BCCF00;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.8rem;}
     .chart-wrap{position:relative;height:200px;}
     .wide-card{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;padding:1rem;margin-bottom:1.2rem;}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;}
+    .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#9ab;}
+    .legend-dot{width:10px;height:10px;border-radius:2px;}
+
+    /* STATUS */
     .status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:1.4rem;}
     .status-card{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;padding:.9rem 1rem;}
     .status-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
@@ -79,96 +94,82 @@
     .status-warn{background:#3a2a0a;color:#e8b84b;}
     .status-bad{background:#3a1010;color:#e27070;}
     .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-    .bar-label{font-size:10px;color:#65A428;width:55px;flex-shrink:0;}
+    .bar-label{font-size:10px;color:#65A428;width:60px;flex-shrink:0;}
     .bar-bg{flex:1;height:6px;background:#1e4a38;border-radius:3px;overflow:hidden;}
     .bar-fill{height:100%;border-radius:3px;transition:width .5s;}
-    .bar-val{font-size:10px;color:#fff;width:35px;text-align:right;flex-shrink:0;}
-    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;}
-    .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#9ab;}
-    .legend-dot{width:10px;height:10px;border-radius:2px;}
+    .bar-val{font-size:10px;color:#fff;width:38px;text-align:right;flex-shrink:0;}
+
+    /* TABLE */
     .table-wrap{overflow-x:auto;}
     table{width:100%;border-collapse:collapse;font-size:12px;}
     th{text-align:left;padding:6px 10px;font-size:10px;color:#65A428;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #1e4a38;}
     td{padding:7px 10px;border-bottom:1px solid #1a3830;color:#ddd;}
     tr:hover td{background:#132e24;}
-    .efficiency-bar{display:inline-block;height:6px;border-radius:3px;background:#65A428;vertical-align:middle;margin-right:5px;}
-    .source-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:6px;}
-    .source-live{background:#1a4a3a;color:#BCCF00;}
-    .source-demo{background:#2a2a0a;color:#e8b84b;}
-    @media(max-width:540px){.charts-grid{grid-template-columns:1fr;}.kpi-value{font-size:18px;}.cfg-row{grid-template-columns:1fr;}}
+    .eff-bar{display:inline-block;height:6px;border-radius:3px;background:#65A428;vertical-align:middle;margin-right:5px;}
+
+    @media(max-width:600px){
+      .charts-grid{grid-template-columns:1fr;}
+      .kpi-value{font-size:18px;}
+      .cfg-row{grid-template-columns:1fr;}
+    }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     PANEL DE CONFIGURACIÓN BigQuery
-══════════════════════════════════════════ -->
+<!-- ══════════════ PANEL DE CONFIGURACIÓN ══════════════ -->
 <div class="config-overlay" id="config-overlay">
   <div class="config-box">
     <div class="config-title">Configuración de conexión</div>
     <div class="config-subtitle">Google BigQuery — Verbo Tech</div>
-
     <div class="config-error" id="config-error"></div>
 
-    <label class="cfg-label">Project ID de Google Cloud</label>
-    <input class="cfg-input" id="cfg-project" placeholder="ej. verbotech-solar-prod" autocomplete="off">
-
-    <label class="cfg-label">Dataset ID</label>
-    <input class="cfg-input" id="cfg-dataset" placeholder="ej. bancas_solares" autocomplete="off">
-
-    <label class="cfg-label">Tabla de telemetría</label>
-    <input class="cfg-input" id="cfg-table" placeholder="datos_esp32" autocomplete="off">
-    <p class="cfg-note">Tabla con columnas: clave_disp, fecha (DATE), hora (STRING), voltaje_bateria, voltaje_panel, corriente_cargador, corriente_total, temperatura, humedad, usuario_cargando (BOOLEAN)</p>
+    <label class="cfg-label">URL del Apps Script (Web App)</label>
+    <input class="cfg-input" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
+    <p class="cfg-note">Despliega tu Apps Script como Web App: Ejecutar como <b>Yo</b>, Acceso: <b>Cualquier usuario</b>. Pega la URL aquí.</p>
 
     <hr class="cfg-sep">
 
     <label class="cfg-label">Escaneos QR — ingreso manual por dispositivo</label>
-    <p class="cfg-note" style="margin-bottom:.6rem;">Ingresa el total de escaneos QR acumulados para cada dispositivo en el periodo. Se usan para calcular tasas de conversión.</p>
+    <p class="cfg-note" style="margin-bottom:.7rem;">Total de escaneos QR acumulados en el periodo. Se usa para calcular tasas de conversión y se muestra en gráficas y tabla.</p>
     <div class="cfg-row">
-      <div><label class="cfg-label" style="font-size:10px;">Disp. 101</label><input class="cfg-input cfg-qr" id="qr-101" type="number" placeholder="0" min="0"></div>
-      <div><label class="cfg-label" style="font-size:10px;">Disp. 102</label><input class="cfg-input cfg-qr" id="qr-102" type="number" placeholder="0" min="0"></div>
+      <div><label class="cfg-label" style="font-size:10px;">Dispositivo 101</label><input class="cfg-input" id="qr-101" type="number" placeholder="0" min="0"></div>
+      <div><label class="cfg-label" style="font-size:10px;">Dispositivo 102</label><input class="cfg-input" id="qr-102" type="number" placeholder="0" min="0"></div>
     </div>
     <div class="cfg-row">
-      <div><label class="cfg-label" style="font-size:10px;">Disp. 201</label><input class="cfg-input cfg-qr" id="qr-201" type="number" placeholder="0" min="0"></div>
-      <div><label class="cfg-label" style="font-size:10px;">Disp. 301</label><input class="cfg-input cfg-qr" id="qr-301" type="number" placeholder="0" min="0"></div>
+      <div><label class="cfg-label" style="font-size:10px;">Dispositivo 201</label><input class="cfg-input" id="qr-201" type="number" placeholder="0" min="0"></div>
+      <div><label class="cfg-label" style="font-size:10px;">Dispositivo 301</label><input class="cfg-input" id="qr-301" type="number" placeholder="0" min="0"></div>
     </div>
     <div class="cfg-row">
-      <div><label class="cfg-label" style="font-size:10px;">Disp. 302</label><input class="cfg-input cfg-qr" id="qr-302" type="number" placeholder="0" min="0"></div>
-      <div><label class="cfg-label" style="font-size:10px;">Disp. 401</label><input class="cfg-input cfg-qr" id="qr-401" type="number" placeholder="0" min="0"></div>
+      <div><label class="cfg-label" style="font-size:10px;">Dispositivo 302</label><input class="cfg-input" id="qr-302" type="number" placeholder="0" min="0"></div>
+      <div><label class="cfg-label" style="font-size:10px;">Dispositivo 401</label><input class="cfg-input" id="qr-401" type="number" placeholder="0" min="0"></div>
     </div>
-
-    <hr class="cfg-sep">
-
-    <label class="cfg-label">API Key de Google (para BigQuery REST API)</label>
-    <input class="cfg-input" id="cfg-apikey" type="password" placeholder="AIza..." autocomplete="off">
-    <p class="cfg-note">
-      Obtén tu API Key en: <strong>console.cloud.google.com</strong> → APIs &amp; Services → Credentials.<br>
-      Activa la API de BigQuery en tu proyecto. La key debe tener permisos de <em>BigQuery Data Viewer</em>.
-    </p>
 
     <hr class="cfg-sep">
 
     <label class="cfg-label">Auto-refresh (minutos)</label>
-    <input class="cfg-input" id="cfg-refresh" type="number" value="5" min="1" max="60" style="width:120px;">
+    <input class="cfg-input" id="cfg-refresh" type="number" value="5" min="1" max="60" style="width:110px;">
 
-    <button class="btn-connect" onclick="conectarBigQuery()">Conectar a BigQuery</button>
-    <button class="btn-demo" onclick="usarDemoData()">Usar datos de demostración</button>
+    <button class="btn-connect" onclick="conectar()">✓ Conectar a BigQuery</button>
+    <button class="btn-demo"    onclick="usarDemo()">Usar datos de demostración</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     DASHBOARD PRINCIPAL
-══════════════════════════════════════════ -->
+<!-- ══════════════ DASHBOARD ══════════════ -->
 <div class="dash" id="dashboard" style="display:none;">
+
   <div class="header">
     <div class="logo-circle">
-      <img src="logo-verbo.png" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <img src="logo-verbo.png" class="logo-img"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
       <div class="logo-fallback" style="display:none;">
-        <svg viewBox="0 0 26 26" fill="none" width="26" height="26"><polygon points="13,2 24,8 24,18 13,24 2,18 2,8" fill="#10312B" stroke="#BCCF00" stroke-width="1.5"/><polyline points="7,13 11,17 19,9" stroke="#BCCF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 26 26" fill="none" width="26" height="26">
+          <polygon points="13,2 24,8 24,18 13,24 2,18 2,8" fill="#10312B" stroke="#BCCF00" stroke-width="1.5"/>
+          <polyline points="7,13 11,17 19,9" stroke="#BCCF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
     </div>
     <div>
-      <div class="header-title">VERBO TECH <span class="source-badge" id="source-badge"></span></div>
+      <div class="header-title">VERBO TECH <span class="source-badge" id="src-badge"></span></div>
       <div class="header-sub">Solar Monitoring Dashboard</div>
     </div>
     <div class="header-right">
@@ -204,499 +205,435 @@
       <button class="btn-refresh" id="btn-refresh" onclick="cargarDatos()">↻ Actualizar</button>
     </div>
     <div class="filter-group" style="margin-left:auto;">
-      <span style="font-size:11px;color:#9ab;">Última actualización: <span style="color:#BCCF00;" id="last-update">--</span></span>
+      <span style="font-size:11px;color:#9ab;">Actualización: <span style="color:#BCCF00;" id="ts-update">--</span></span>
     </div>
   </div>
 
   <div class="main">
+
+    <!-- KPIs principales -->
     <div class="section-title">Métricas del periodo</div>
-    <div class="kpi-grid" id="kpi-grid"></div>
+    <div class="kpi-grid" id="kpi-main"></div>
 
+    <!-- Gráfica 1: QR vs Respuestas -->
     <div class="charts-grid">
       <div class="chart-card">
-        <div class="chart-title">Escaneos QR vs Respuestas registradas</div>
-        <div class="chart-wrap"><canvas id="chart-qr" role="img" aria-label="Escaneos QR vs Respuestas">Cargando...</canvas></div>
+        <div class="chart-title">Escaneos QR vs Respuestas registradas (por día)</div>
+        <div class="chart-wrap"><canvas id="c-qr"></canvas></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-dot" style="background:#BCCF00;"></span>Escaneos QR</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#65A428;"></span>Respuestas</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#BCCF00;"></span>Escaneos QR (manual)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#65A428;"></span>Respuestas = Usuarios</span>
         </div>
       </div>
+
+      <!-- Gráfica 2: Respuestas vs Usuarios -->
       <div class="chart-card">
-        <div class="chart-title">Respuestas registradas vs Usuarios conectados</div>
-        <div class="chart-wrap"><canvas id="chart-users" role="img" aria-label="Respuestas vs Usuarios">Cargando...</canvas></div>
+        <div class="chart-title">Respuestas registradas vs Usuarios conectados (por día)</div>
+        <div class="chart-wrap"><canvas id="c-users"></canvas></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-dot" style="background:#65A428;"></span>Respuestas</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#3ea8c8;"></span>Usuarios conectados</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#3ea8c8;"></span>Usuarios (>0.4A)</span>
         </div>
       </div>
     </div>
 
+    <!-- Gráfica 3: Voltaje batería hoy | Gráfica 4: Producción vs Consumo hoy -->
     <div class="charts-grid">
       <div class="chart-card">
-        <div class="chart-title">Voltaje de batería (V) — últimas 24h</div>
-        <div class="chart-wrap"><canvas id="chart-voltage" role="img" aria-label="Voltaje batería 24h">Cargando...</canvas></div>
+        <div class="chart-title">Voltaje de batería (V) — hoy por hora</div>
+        <div class="chart-wrap"><canvas id="c-voltage"></canvas></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#BCCF00;"></span>Voltaje batería (V)</span>
+        </div>
       </div>
       <div class="chart-card">
-        <div class="chart-title">Producción vs Consumo energético (kWh)</div>
-        <div class="chart-wrap"><canvas id="chart-energy" role="img" aria-label="Producción vs Consumo">Cargando...</canvas></div>
+        <div class="chart-title">Producción vs Consumo energético (kWh) — hoy</div>
+        <div class="chart-wrap"><canvas id="c-energy"></canvas></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-dot" style="background:#BCCF00;"></span>Producción</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#e87040;"></span>Consumo</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#BCCF00;"></span>Producción kWh</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#e87040;"></span>Consumo kWh</span>
         </div>
       </div>
     </div>
 
+    <!-- Gráfica 5: Temperatura y Humedad hoy -->
     <div class="wide-card">
-      <div class="chart-title" style="margin-bottom:.9rem;">Temperatura y Humedad — últimas 24h</div>
-      <div class="chart-wrap" style="height:160px;"><canvas id="chart-ambience" role="img" aria-label="Temperatura y Humedad 24h">Cargando...</canvas></div>
+      <div class="chart-title" style="margin-bottom:.9rem;">Temperatura y Humedad — hoy por hora</div>
+      <div class="chart-wrap" style="height:160px;"><canvas id="c-amb"></canvas></div>
       <div class="legend" style="margin-top:8px;">
         <span class="legend-item"><span class="legend-dot" style="background:#e87040;"></span>Temperatura (°C)</span>
         <span class="legend-item"><span class="legend-dot" style="background:#3ea8c8;"></span>Humedad (%)</span>
       </div>
     </div>
 
+    <!-- Estado de bancas -->
     <div class="section-title">Estado de bancas solares</div>
     <div class="status-grid" id="status-grid"></div>
 
+    <!-- Tabla rendimiento -->
     <div class="section-title" style="margin-top:1.2rem;">Rendimiento por dispositivo</div>
     <div class="wide-card">
       <div class="table-wrap">
         <table>
           <thead><tr>
-            <th>Dispositivo</th><th>QR Escaneados</th><th>Respuestas</th><th>Usuarios</th>
-            <th>Producción kWh</th><th>Consumo kWh</th><th>Eficiencia</th><th>Estado batería</th>
+            <th>Dispositivo</th>
+            <th>QR Escaneados</th>
+            <th>Respuestas</th>
+            <th>Usuarios conectados</th>
+            <th>Producción kWh</th>
+            <th>Consumo kWh</th>
+            <th>Eficiencia</th>
+            <th>Estado batería</th>
           </tr></thead>
-          <tbody id="perf-tbody"></tbody>
+          <tbody id="tbl-body"></tbody>
         </table>
       </div>
     </div>
 
+    <!-- KPIs adicionales -->
     <div class="section-title" style="margin-top:1.2rem;">Indicadores adicionales</div>
     <div class="kpi-grid" id="kpi-extra"></div>
+
   </div>
-</div>
+</div><!-- /dash -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    ESTADO GLOBAL
-══════════════════════════════════════ */
-let BQ = { project:'', dataset:'', table:'datos_esp32', apiKey:'', refreshMin:5 };
-// Escaneos QR manuales por dispositivo
-let qrManual = { '101':0, '102':0, '201':0, '301':0, '302':0, '401':0 };
-let modoDemo = false;
-let charts = {};
-let refreshTimer = null;
+══════════════════════════════════════════════════════ */
+const DEVICES  = ['101','102','201','301','302','401'];
+let SCRIPT_URL = '';
+let qrManual   = {};   // { '101': 320, '102': 150, ... }
+let refreshMin = 5;
+let modoDemo   = false;
+let charts     = {};
+let timer      = null;
 
-/* ══════════════════════════════════════
-   INICIALIZACIÓN
-══════════════════════════════════════ */
+DEVICES.forEach(d => qrManual[d] = 0);
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
 window.onload = () => {
-  // Fechas por defecto: último mes
-  const hoy = new Date();
+  const hoy   = new Date();
   const hace30 = new Date(); hace30.setDate(hoy.getDate() - 30);
-  document.getElementById('date-end').value = hoy.toISOString().split('T')[0];
-  document.getElementById('date-start').value = hace30.toISOString().split('T')[0];
+  document.getElementById('date-end').value   = fmt(hoy);
+  document.getElementById('date-start').value = fmt(hace30);
 
-  // Si hay configuración guardada, cargarla
-  const saved = localStorage.getItem('vt_bq_config');
+  const saved = localStorage.getItem('vt_cfg');
   if (saved) {
     try {
-      const cfg = JSON.parse(saved);
-      Object.assign(BQ, cfg.bq || cfg);
-      if (cfg.qrManual) Object.assign(qrManual, cfg.qrManual);
-      document.getElementById('cfg-project').value = BQ.project;
-      document.getElementById('cfg-dataset').value = BQ.dataset;
-      document.getElementById('cfg-table').value = BQ.table || 'datos_esp32';
-      document.getElementById('cfg-apikey').value = BQ.apiKey;
-      document.getElementById('cfg-refresh').value = BQ.refreshMin;
-      // Restaurar QR manuales
-      Object.keys(qrManual).forEach(k => {
-        const el = document.getElementById('qr-'+k);
+      const c = JSON.parse(saved);
+      SCRIPT_URL = c.url    || '';
+      refreshMin = c.min    || 5;
+      if (c.qr) Object.assign(qrManual, c.qr);
+
+      document.getElementById('cfg-url').value     = SCRIPT_URL;
+      document.getElementById('cfg-refresh').value = refreshMin;
+      DEVICES.forEach(k => {
+        const el = document.getElementById('qr-' + k);
         if (el) el.value = qrManual[k] || '';
       });
-    } catch(e){}
+
+      if (SCRIPT_URL) {
+        mostrarDash('BigQuery', 'source-live');
+        cargarDatos();
+        startTimer();
+        return;
+      }
+    } catch(e) {}
   }
+  document.getElementById('config-overlay').style.display = 'flex';
 };
 
-/* ══════════════════════════════════════
-   CONFIGURACIÓN
-══════════════════════════════════════ */
+const fmt = d => d.toISOString().split('T')[0];
+
+/* ══════════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════════ */
 function abrirConfig() {
   document.getElementById('config-overlay').style.display = 'flex';
 }
 
-function conectarBigQuery() {
+function conectar() {
   const err = document.getElementById('config-error');
   err.style.display = 'none';
 
-  BQ.project   = document.getElementById('cfg-project').value.trim();
-  BQ.dataset   = document.getElementById('cfg-dataset').value.trim();
-  BQ.table     = document.getElementById('cfg-table').value.trim() || 'datos_esp32';
-  BQ.apiKey    = document.getElementById('cfg-apikey').value.trim();
-  BQ.refreshMin = parseInt(document.getElementById('cfg-refresh').value) || 5;
-
-  // Leer escaneos QR manuales
-  ['101','102','201','301','302','401'].forEach(k => {
-    qrManual[k] = parseInt(document.getElementById('qr-'+k).value) || 0;
+  SCRIPT_URL = document.getElementById('cfg-url').value.trim();
+  refreshMin = parseInt(document.getElementById('cfg-refresh').value) || 5;
+  DEVICES.forEach(k => {
+    qrManual[k] = parseInt(document.getElementById('qr-' + k).value) || 0;
   });
 
-  if (!BQ.project || !BQ.dataset || !BQ.apiKey) {
-    err.textContent = 'Por favor completa: Project ID, Dataset ID y API Key.';
+  if (!SCRIPT_URL) {
+    err.textContent = 'Ingresa la URL del Apps Script.';
     err.style.display = 'block';
     return;
   }
-
-  localStorage.setItem('vt_bq_config', JSON.stringify({ bq: BQ, qrManual }));
-
+  localStorage.setItem('vt_cfg', JSON.stringify({ url: SCRIPT_URL, min: refreshMin, qr: qrManual }));
   modoDemo = false;
   document.getElementById('config-overlay').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('source-badge').textContent = 'BigQuery';
-  document.getElementById('source-badge').className = 'source-badge source-live';
-
+  mostrarDash('BigQuery', 'source-live');
   cargarDatos();
-  iniciarAutoRefresh();
+  startTimer();
 }
 
-function usarDemoData() {
+function usarDemo() {
   modoDemo = true;
   document.getElementById('config-overlay').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('source-badge').textContent = 'DEMO';
-  document.getElementById('source-badge').className = 'source-badge source-demo';
+  mostrarDash('DEMO', 'source-demo');
   cargarDatos();
 }
 
-/* ══════════════════════════════════════
-   AUTO-REFRESH
-══════════════════════════════════════ */
-function iniciarAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(cargarDatos, BQ.refreshMin * 60 * 1000);
+function mostrarDash(label, cls) {
+  document.getElementById('dashboard').style.display = 'block';
+  const b = document.getElementById('src-badge');
+  b.textContent = label;
+  b.className = 'source-badge ' + cls;
 }
 
-/* ══════════════════════════════════════
-   BIGQUERY REST API
-   Endpoint: POST https://bigquery.googleapis.com/bigquery/v2/projects/{project}/queries
-══════════════════════════════════════ */
-async function queryBigQuery(sql) {
-  const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${BQ.project}/queries?key=${BQ.apiKey}`;
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: sql, useLegacySql: false, timeoutMs: 30000 })
-  });
-  if (!resp.ok) {
-    const e = await resp.json();
-    throw new Error(e.error?.message || `HTTP ${resp.status}`);
-  }
-  const data = await resp.json();
-  // Convertir filas a objetos
-  const fields = data.schema?.fields?.map(f => f.name) || [];
-  return (data.rows || []).map(row =>
-    Object.fromEntries(fields.map((f, i) => [f, row.f[i]?.v ?? null]))
-  );
+function startTimer() {
+  if (timer) clearInterval(timer);
+  timer = setInterval(cargarDatos, refreshMin * 60000);
 }
 
-/* ══════════════════════════════════════
-   QUERIES BigQuery — tabla: datos_esp32
-   Columnas clave: clave_disp, fecha (DATE), hora (STRING),
-   voltaje_bateria, voltaje_panel, corriente_cargador,
-   corriente_total, temperatura, humedad, usuario_cargando (BOOL)
-══════════════════════════════════════ */
-function getDeviceFilter(alias) {
-  const d = document.getElementById('sel-device').value;
-  const pfx = alias ? alias+'.' : '';
-  return d === 'Todos' ? '' : `AND ${pfx}clave_disp = '${d}'`;
-}
-
-// Retorna suma de QR manuales según filtro de dispositivo
-function getQrManualTotal() {
-  const d = document.getElementById('sel-device').value;
-  if (d === 'Todos') return Object.values(qrManual).reduce((a,b)=>a+b, 0);
-  return qrManual[d] || 0;
-}
-
-function getSQLResumen() {
-  const inicio = document.getElementById('date-start').value;
-  const fin    = document.getElementById('date-end').value;
-  const df = getDeviceFilter('t');
-  return `
-    SELECT
-      COUNT(*) AS total_registros,
-      ROUND(AVG(voltaje_bateria), 2)   AS avg_voltaje_bat,
-      ROUND(AVG(voltaje_panel), 2)     AS avg_voltaje_panel,
-      ROUND(AVG(corriente_total), 2)   AS avg_corriente,
-      ROUND(AVG(temperatura), 1)       AS avg_temp,
-      ROUND(AVG(humedad), 1)           AS avg_humedad,
-      ROUND(SUM(voltaje_panel * corriente_cargador) / 3600.0, 3) AS produccion_kwh,
-      ROUND(SUM(voltaje_bateria * corriente_total)  / 3600.0, 3) AS consumo_kwh,
-      COUNTIF(usuario_cargando = TRUE)  AS sesiones_usuario,
-      ROUND(MIN(voltaje_bateria), 2)    AS min_bat,
-      ROUND(MAX(voltaje_bateria), 2)    AS max_bat
-    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\` t
-    WHERE t.fecha BETWEEN '${inicio}' AND '${fin}'
-    ${df}
-  `;
-}
-
-function getSQLPorDispositivo() {
-  const inicio = document.getElementById('date-start').value;
-  const fin    = document.getElementById('date-end').value;
-  return `
-    SELECT
-      clave_disp AS device_id,
-      ROUND(AVG(voltaje_bateria), 1)   AS avg_bat,
-      ROUND(SUM(voltaje_panel * corriente_cargador) / 3600.0, 2) AS prod_kwh,
-      ROUND(SUM(voltaje_bateria * corriente_total)  / 3600.0, 2) AS cons_kwh,
-      COUNTIF(usuario_cargando = TRUE)  AS usuarios,
-      ROUND(
-        SAFE_DIVIDE(AVG(voltaje_bateria) - 10.5, 12.6 - 10.5) * 100
-      , 0) AS bat_pct
-    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\`
-    WHERE fecha BETWEEN '${inicio}' AND '${fin}'
-    GROUP BY clave_disp
-    ORDER BY clave_disp
-  `;
-}
-
-// Timeline diaria: usuarios conectados por día (= respuestas registradas)
-function getSQLTimeline() {
-  const inicio = document.getElementById('date-start').value;
-  const fin    = document.getElementById('date-end').value;
-  const df = getDeviceFilter('t');
-  return `
-    SELECT
-      fecha AS dia,
-      COUNTIF(usuario_cargando = TRUE) AS usuarios_dia
-    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\` t
-    WHERE t.fecha BETWEEN '${inicio}' AND '${fin}'
-    ${df}
-    GROUP BY fecha
-    ORDER BY fecha
-  `;
-}
-
-// Últimas 24h agrupadas por hora usando campo hora STRING
-function getSQLUltimas24h() {
-  const df = getDeviceFilter('t');
-  return `
-    SELECT
-      SUBSTR(hora, 1, 5) AS hora_str,
-      ROUND(AVG(voltaje_bateria), 2)   AS avg_bat,
-      ROUND(AVG(temperatura), 1)       AS avg_temp,
-      ROUND(AVG(humedad), 1)           AS avg_hum,
-      ROUND(SUM(voltaje_panel * corriente_cargador) / 3600.0, 4) AS prod_kwh,
-      ROUND(SUM(voltaje_bateria * corriente_total)  / 3600.0, 4) AS cons_kwh,
-      COUNTIF(usuario_cargando = TRUE)  AS usuarios_hora
-    FROM \`${BQ.project}.${BQ.dataset}.${BQ.table}\` t
-    WHERE t.fecha = CURRENT_DATE()
-    ${df}
-    GROUP BY hora_str
-    ORDER BY hora_str
-  `;
-}
-
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    CARGA PRINCIPAL
-══════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 async function cargarDatos() {
   const btn = document.getElementById('btn-refresh');
   const bar = document.getElementById('loading-bar');
   btn.disabled = true;
   bar.classList.add('active');
-
   try {
-    if (modoDemo) {
-      renderizarDemo();
-    } else {
-      await cargarDesdeBigQuery();
-    }
-    document.getElementById('last-update').textContent =
-      new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    modoDemo ? renderDemo() : await cargarReal();
+    document.getElementById('ts-update').textContent =
+      new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
   } catch(e) {
-    console.error('Error BigQuery:', e);
-    alert('Error al consultar BigQuery:\n' + e.message + '\n\nVerifica tu Project ID, Dataset, Tabla y API Key.');
+    console.error(e);
+    alert('Error al consultar BigQuery:\n' + e.message);
   } finally {
     btn.disabled = false;
     bar.classList.remove('active');
   }
 }
 
-/* ══════════════════════════════════════
-   RENDERIZADO CON DATOS REALES
-══════════════════════════════════════ */
-async function cargarDesdeBigQuery() {
-  // Lanzar queries en paralelo
-  const [resumen, porDev, ultimas24h] = await Promise.all([
-    queryBigQuery(getSQLResumen()),
-    queryBigQuery(getSQLPorDispositivo()),
-    queryBigQuery(getSQLUltimas24h()),
-  ]);
+/* ══════════════════════════════════════════════════════
+   LLAMADA AL APPS SCRIPT
+══════════════════════════════════════════════════════ */
+async function cargarReal() {
+  const device = document.getElementById('sel-device').value;
+  const start  = document.getElementById('date-start').value;
+  const end    = document.getElementById('date-end').value;
 
-  // Escaneos (tabla separada, opcional)
-  let escaneosTotal = {total_qr:'N/D', total_resp:'N/D'};
-  let escaneosTimeline = [];
-  const sqlEs = getSQLEscaneos();
-  const sqlEsT = getSQLEscaneosTotal();
-  if (sqlEs && sqlEsT) {
-    try {
-      const [et, etl] = await Promise.all([
-        queryBigQuery(sqlEsT),
-        queryBigQuery(sqlEs)
-      ]);
-      if (et.length) escaneosTotal = et[0];
-      escaneosTimeline = etl;
-    } catch(e) { console.warn('Sin tabla QR:', e.message); }
-  }
+  const url = `${SCRIPT_URL}?device=${encodeURIComponent(device)}&startDate=${start}&endDate=${end}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const data = await resp.json();
+  if (data.error) throw new Error('Apps Script: ' + data.error);
 
-  const r = resumen[0] || {};
-  const qrTotal = parseInt(escaneosTotal.total_qr) || 0;
-  const respTotal = parseInt(escaneosTotal.total_resp) || 0;
-  const usuarios = parseInt(r.sesiones_usuario) || 0;
-  const prodKwh = parseFloat(r.produccion_kwh) || 0;
-  const consKwh = parseFloat(r.consumo_kwh) || 0;
-  const eficiencia = consKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
+  console.log('📦 Respuesta BigQuery:', data);
 
-  // KPIs principales
-  const inicio = document.getElementById('date-start').value.split('-').reverse().join('/');
-  const fin = document.getElementById('date-end').value.split('-').reverse().join('/');
-  const dev = document.getElementById('sel-device').value;
-
-  renderKpis([
-    {label:'Número de dispositivo', value: dev, unit:'', icon:'📡', accent:'#65A428'},
-    {label:'Escaneos QR', value: qrTotal.toLocaleString(), unit:'total en periodo', icon:'⬛', accent:'#BCCF00'},
-    {label:'Respuestas registradas', value: respTotal.toLocaleString(), unit:'total en periodo', icon:'📋', accent:'#65A428'},
-    {label:'Usuarios conectados', value: usuarios.toLocaleString(), unit:'cargador > 0.3A', icon:'👤', accent:'#BCCF00'},
-    {label:'Fecha inicio periodo', value: inicio, unit:'', icon:'📅', accent:'#65A428'},
-    {label:'Fecha fin periodo', value: fin, unit:'', icon:'📅', accent:'#BCCF00'},
-    {label:'Producción energética', value: prodKwh.toFixed(2), unit:'kWh', icon:'⚡', accent:'#BCCF00'},
-    {label:'Consumo energético', value: consKwh.toFixed(2), unit:'kWh', icon:'🔋', accent:'#65A428'},
-  ], 'kpi-grid');
-
-  // KPIs adicionales
-  const tasaQR = qrTotal > 0 ? ((respTotal/qrTotal)*100).toFixed(1) : '—';
-  const tasaUser = qrTotal > 0 ? ((usuarios/qrTotal)*100).toFixed(1) : '—';
-  renderKpis([
-    {label:'Rendimiento energético', value: eficiencia+'', unit:'% producción/consumo', icon:'📊', accent:'#BCCF00'},
-    {label:'Tasa conversión QR→Resp.', value: tasaQR+'', unit:'%', icon:'🔄', accent:'#65A428'},
-    {label:'Tasa conexión usuario', value: tasaUser+'', unit:'% usuarios/escaneos', icon:'📶', accent:'#BCCF00'},
-    {label:'Voltaje promedio batería', value: r.avg_voltaje_bat||'—', unit:'V', icon:'🔋', accent:'#65A428'},
-    {label:'Voltaje promedio panel', value: r.avg_voltaje_panel||'—', unit:'V', icon:'☀️', accent:'#BCCF00'},
-    {label:'Temperatura promedio', value: r.avg_temp||'—', unit:'°C', icon:'🌡️', accent:'#65A428'},
-    {label:'Humedad promedio', value: r.avg_humedad||'—', unit:'%', icon:'💧', accent:'#BCCF00'},
-    {label:'Corriente promedio', value: r.avg_corriente||'—', unit:'A', icon:'⚡', accent:'#65A428'},
-  ], 'kpi-extra');
-
-  // Gráficas timeline escaneos/respuestas
-  const labelsQR = escaneosTimeline.map(r => r.dia);
-  const dataQR   = escaneosTimeline.map(r => parseInt(r.escaneos)||0);
-  const dataResp = escaneosTimeline.map(r => parseInt(r.respuestas)||0);
-  const dataUsers = dataResp.map(v => Math.round(v * 0.75)); // estimado si no hay col separada
-
-  renderBarChart('chart-qr', labelsQR, [
-    {label:'Escaneos QR', data:dataQR, bg:'#BCCF00'},
-    {label:'Respuestas', data:dataResp, bg:'#65A428'},
-  ]);
-
-  renderLineChart('chart-users', labelsQR, [
-    {label:'Respuestas', data:dataResp, color:'#65A428', dash:[4,4]},
-    {label:'Usuarios', data:dataUsers, color:'#3ea8c8', dash:[]},
-  ]);
-
-  // 24h
-  const horas = ultimas24h.map(r => r.hora);
-  const batData = ultimas24h.map(r => parseFloat(r.avg_bat)||0);
-  const tempData = ultimas24h.map(r => parseFloat(r.avg_temp)||0);
-  const humData  = ultimas24h.map(r => parseFloat(r.avg_hum)||0);
-  const prod24 = ultimas24h.map(r => parseFloat(r.prod_kwh)||0);
-  const cons24 = ultimas24h.map(r => parseFloat(r.cons_kwh)||0);
-
-  renderLineChart('chart-voltage', horas, [
-    {label:'Voltaje V', data:batData, color:'#BCCF00', dash:[]},
-  ]);
-  renderBarChart('chart-energy', horas, [
-    {label:'Producción kWh', data:prod24, bg:'#BCCF00'},
-    {label:'Consumo kWh', data:cons24, bg:'#e87040'},
-  ]);
-  renderDualAxis('chart-ambience', horas, tempData, humData);
-
-  // Tabla por dispositivo
-  renderTablaDispositivos(porDev);
-  renderStatusCards(porDev);
+  renderTodo(data, device, start, end);
 }
 
-/* ══════════════════════════════════════
-   MODO DEMO (datos simulados)
-══════════════════════════════════════ */
-function renderizarDemo() {
-  const rand = (a,b) => Math.round(Math.random()*(b-a)+a);
-  const days14 = Array.from({length:14},(_,i)=>{const d=new Date(2025,3,14+i);return `${d.getDate()}/${d.getMonth()+1}`;});
-  const h24 = Array.from({length:24},(_,i)=>`${String(i).padStart(2,'0')}:00`);
-  const dev = document.getElementById('sel-device').value;
-  const inicio = document.getElementById('date-start').value.split('-').reverse().join('/');
-  const fin = document.getElementById('date-end').value.split('-').reverse().join('/');
+/* ══════════════════════════════════════════════════════
+   RENDER CON DATOS REALES
+══════════════════════════════════════════════════════ */
+function renderTodo(data, device, start, end) {
+  const r   = data.resumen        || {};
+  const tl  = data.timeline       || [];   // [{dia, usuarios_dia}]
+  const h24 = data.ultimas24h     || [];   // [{hora_str, avg_bat, avg_temp, avg_hum, prod_kwh, cons_kwh}]
+  const pd  = data.porDispositivo || [];   // [{device_id, avg_bat, prod_kwh, cons_kwh, usuarios, bat_pct}]
 
-  renderKpis([
-    {label:'Número de dispositivo', value:dev, unit:'', icon:'📡', accent:'#65A428'},
-    {label:'Escaneos QR', value:'1,284', unit:'total en periodo', icon:'⬛', accent:'#BCCF00'},
-    {label:'Respuestas registradas', value:'987', unit:'total en periodo', icon:'📋', accent:'#65A428'},
-    {label:'Usuarios conectados', value:'743', unit:'cargador > 0.3A', icon:'👤', accent:'#BCCF00'},
-    {label:'Fecha inicio periodo', value:inicio, unit:'', icon:'📅', accent:'#65A428'},
-    {label:'Fecha fin periodo', value:fin, unit:'', icon:'📅', accent:'#BCCF00'},
-    {label:'Producción energética', value:'38.6', unit:'kWh', icon:'⚡', accent:'#BCCF00'},
-    {label:'Consumo energético', value:'29.4', unit:'kWh', icon:'🔋', accent:'#65A428'},
-  ], 'kpi-grid');
+  // ── Valores clave ──────────────────────────────────────────
+  const usuarios  = parseInt(r.sesiones_usuario) || 0;
+  const prodKwh   = parseFloat(r.produccion_kwh) || 0;
+  const consKwh   = parseFloat(r.consumo_kwh)    || 0;
+  const efic      = prodKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
 
-  renderKpis([
-    {label:'Rendimiento energético', value:'76.2', unit:'% producción/consumo', icon:'📊', accent:'#BCCF00'},
-    {label:'Tasa conversión QR→Resp.', value:'76.9', unit:'%', icon:'🔄', accent:'#65A428'},
-    {label:'Tasa conexión usuario', value:'57.8', unit:'% usuarios/escaneos', icon:'📶', accent:'#BCCF00'},
-    {label:'Voltaje promedio batería', value:'12.6', unit:'V', icon:'🔋', accent:'#65A428'},
-    {label:'Voltaje promedio panel', value:'18.4', unit:'V', icon:'☀️', accent:'#BCCF00'},
-    {label:'Temperatura promedio', value:'28.3', unit:'°C', icon:'🌡️', accent:'#65A428'},
-    {label:'Humedad promedio', value:'62', unit:'%', icon:'💧', accent:'#BCCF00'},
-    {label:'Corriente promedio', value:'2.8', unit:'A', icon:'⚡', accent:'#65A428'},
-  ], 'kpi-extra');
+  // QR manuales filtrados por dispositivo seleccionado
+  const qrTotal   = device === 'Todos'
+    ? DEVICES.reduce((s, k) => s + (qrManual[k] || 0), 0)
+    : (qrManual[device] || 0);
 
-  const qrD = days14.map(()=>rand(50,110));
-  const respD = qrD.map(v=>Math.round(v*0.77));
-  const usersD = respD.map(v=>Math.round(v*0.75));
-  renderBarChart('chart-qr', days14, [{label:'Escaneos QR',data:qrD,bg:'#BCCF00'},{label:'Respuestas',data:respD,bg:'#65A428'}]);
-  renderLineChart('chart-users', days14, [
-    {label:'Respuestas',data:respD,color:'#65A428',dash:[4,4]},
-    {label:'Usuarios',data:usersD,color:'#3ea8c8',dash:[]},
+  // Respuestas = usuarios conectados (misma cantidad)
+  const respTotal = usuarios;
+
+  const iniStr = start.split('-').reverse().join('/');
+  const finStr = end.split('-').reverse().join('/');
+
+  // ── KPIs principales (8 parámetros exactos) ───────────────
+  renderKpis('kpi-main', [
+    { label:'Número de dispositivo',  value: device,                       unit:'',                         icon:'📡', accent:'#65A428' },
+    { label:'Escaneos QR',            value: qrTotal.toLocaleString(),     unit:'total en periodo (manual)', icon:'⬛', accent:'#BCCF00' },
+    { label:'Respuestas registradas', value: respTotal.toLocaleString(),   unit:'= usuarios conectados',    icon:'📋', accent:'#65A428' },
+    { label:'Usuarios conectados',    value: usuarios.toLocaleString(),    unit:'veces que supera 0.4A',    icon:'👤', accent:'#BCCF00' },
+    { label:'Fecha inicio periodo',   value: iniStr,                       unit:'',                         icon:'📅', accent:'#65A428' },
+    { label:'Fecha fin periodo',      value: finStr,                       unit:'',                         icon:'📅', accent:'#BCCF00' },
+    { label:'Producción energética',  value: prodKwh.toFixed(4),          unit:'kWh',                      icon:'⚡', accent:'#BCCF00' },
+    { label:'Consumo energético',     value: consKwh.toFixed(4),          unit:'kWh',                      icon:'🔋', accent:'#65A428' },
   ]);
 
-  const voltD = h24.map((_,i)=>+(12.0+Math.sin(i/3)*0.8+Math.random()*0.2).toFixed(2));
-  renderLineChart('chart-voltage', h24, [{label:'Voltaje V',data:voltD,color:'#BCCF00',dash:[]}]);
+  // ── KPIs adicionales ──────────────────────────────────────
+  const tasaQR   = qrTotal > 0 ? ((respTotal / qrTotal) * 100).toFixed(1) : '—';
+  const tasaUser = qrTotal > 0 ? ((usuarios  / qrTotal) * 100).toFixed(1) : '—';
+  renderKpis('kpi-extra', [
+    { label:'Rendimiento energético',     value: efic + '%',               unit:'consumo / producción',     icon:'📊', accent:'#BCCF00' },
+    { label:'Tasa QR → Respuesta',        value: tasaQR + '%',             unit:'respuestas / escaneos',    icon:'🔄', accent:'#65A428' },
+    { label:'Tasa conexión usuario',      value: tasaUser + '%',           unit:'usuarios / escaneos QR',   icon:'📶', accent:'#BCCF00' },
+    { label:'Voltaje promedio batería',   value: r.avg_voltaje_bat   || '—', unit:'V',                    icon:'🔋', accent:'#65A428' },
+    { label:'Voltaje promedio panel',     value: r.avg_voltaje_panel || '—', unit:'V',                    icon:'☀️', accent:'#BCCF00' },
+    { label:'Temperatura promedio',       value: r.avg_temp          || '—', unit:'°C',                   icon:'🌡️', accent:'#65A428' },
+    { label:'Humedad promedio',           value: r.avg_humedad       || '—', unit:'%',                    icon:'💧', accent:'#BCCF00' },
+    { label:'Corriente promedio sistema', value: r.avg_corriente     || '—', unit:'A',                    icon:'⚡', accent:'#65A428' },
+  ]);
 
-  const prodD = days14.map(()=>+(Math.random()*1.5+2).toFixed(2));
-  const consD = prodD.map(v=>+(v*0.76+Math.random()*0.2).toFixed(2));
-  renderBarChart('chart-energy', days14, [{label:'Producción kWh',data:prodD,bg:'#BCCF00'},{label:'Consumo kWh',data:consD,bg:'#e87040'}]);
+  // ── Gráficas de timeline (por día) ────────────────────────
+  const dias     = tl.map(t => t.dia ? t.dia.substring(5) : '');  // MM-DD
+  const usersDia = tl.map(t => parseInt(t.usuarios_dia) || 0);
+  const respDia  = usersDia.slice(); // respuestas = usuarios
 
-  const tempD = h24.map((_,i)=>+(25+Math.sin(i/4)*5+Math.random()*1.5).toFixed(1));
-  const humD  = h24.map((_,i)=>+(60+Math.cos(i/4)*10+Math.random()*3).toFixed(1));
-  renderDualAxis('chart-ambience', h24, tempD, humD);
+  // QR manual distribuido proporcionalmente entre los días
+  const nDias = dias.length || 1;
+  const qrDia = dias.map(() => Math.round(qrTotal / nDias));
+
+  mkBar('c-qr', dias, [
+    { label:'Escaneos QR', data: qrDia,    bg:'#BCCF00' },
+    { label:'Respuestas',  data: respDia,  bg:'#65A428' },
+  ]);
+
+  mkLine('c-users', dias, [
+    { label:'Respuestas',          data: respDia,   color:'#65A428', dash:[4,4] },
+    { label:'Usuarios conectados', data: usersDia,  color:'#3ea8c8', dash:[]   },
+  ]);
+
+  // ── Gráficas de hoy (por hora) ────────────────────────────
+  const horas   = h24.map(h => h.hora_str || h.hora || '');
+  const batData = h24.map(h => parseFloat(h.avg_bat)  || 0);
+  const tmpData = h24.map(h => parseFloat(h.avg_temp) || 0);
+  const humData = h24.map(h => parseFloat(h.avg_hum)  || 0);
+  const prdData = h24.map(h => parseFloat(h.prod_kwh) || 0);
+  const cnsData = h24.map(h => parseFloat(h.cons_kwh) || 0);
+
+  mkLine('c-voltage', horas, [
+    { label:'Voltaje batería (V)', data: batData, color:'#BCCF00', dash:[] },
+  ]);
+
+  mkBar('c-energy', horas, [
+    { label:'Producción kWh', data: prdData, bg:'#BCCF00' },
+    { label:'Consumo kWh',    data: cnsData, bg:'#e87040' },
+  ]);
+
+  mkDual('c-amb', horas, tmpData, humData);
+
+  // ── Tabla y status — por dispositivo ─────────────────────
+  // Unir datos de BigQuery con QR manuales
+  const dispData = pd.map(d => ({
+    ...d,
+    qr:   qrManual[d.device_id] || 0,
+    resp: parseInt(d.usuarios)  || 0,
+  }));
+
+  renderTabla(dispData);
+  renderStatus(dispData);
+}
+
+/* ══════════════════════════════════════════════════════
+   MODO DEMO
+══════════════════════════════════════════════════════ */
+function renderDemo() {
+  const R  = (a, b) => Math.round(Math.random() * (b - a) + a);
+  const Rf = (a, b, n) => +(Math.random() * (b - a) + a).toFixed(n);
+  const device = document.getElementById('sel-device').value;
+  const start  = document.getElementById('date-start').value;
+  const end    = document.getElementById('date-end').value;
+
+  // Simular 14 días de timeline
+  const dias14 = Array.from({length:14}, (_, i) => {
+    const d = new Date(2025, 3, 14 + i);
+    return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  });
+  const h24 = Array.from({length:24}, (_, i) => `${String(i).padStart(2,'0')}:00`);
+
+  const qrTotal   = device === 'Todos' ? 4600 : 1284;
+  const usuarios  = device === 'Todos' ? 2900 : 743;
+  const prodKwh   = device === 'Todos' ? 0.2230 : 0.0381;
+  const consKwh   = device === 'Todos' ? 0.1690 : 0.0290;
+  const iniStr    = start.split('-').reverse().join('/');
+  const finStr    = end.split('-').reverse().join('/');
+
+  renderKpis('kpi-main', [
+    { label:'Número de dispositivo',  value: device,                 unit:'',                           icon:'📡', accent:'#65A428' },
+    { label:'Escaneos QR',            value: qrTotal.toLocaleString(), unit:'total en periodo (manual)', icon:'⬛', accent:'#BCCF00' },
+    { label:'Respuestas registradas', value: usuarios.toLocaleString(), unit:'= usuarios conectados',   icon:'📋', accent:'#65A428' },
+    { label:'Usuarios conectados',    value: usuarios.toLocaleString(), unit:'veces que supera 0.4A',   icon:'👤', accent:'#BCCF00' },
+    { label:'Fecha inicio periodo',   value: iniStr,                 unit:'',                           icon:'📅', accent:'#65A428' },
+    { label:'Fecha fin periodo',      value: finStr,                 unit:'',                           icon:'📅', accent:'#BCCF00' },
+    { label:'Producción energética',  value: prodKwh.toFixed(4),    unit:'kWh',                        icon:'⚡', accent:'#BCCF00' },
+    { label:'Consumo energético',     value: consKwh.toFixed(4),    unit:'kWh',                        icon:'🔋', accent:'#65A428' },
+  ]);
+
+  const efic    = Math.round(consKwh / prodKwh * 100);
+  const tasaQR  = ((usuarios / qrTotal) * 100).toFixed(1);
+  renderKpis('kpi-extra', [
+    { label:'Rendimiento energético',     value: efic + '%',   unit:'consumo / producción',   icon:'📊', accent:'#BCCF00' },
+    { label:'Tasa QR → Respuesta',        value: tasaQR + '%', unit:'respuestas / escaneos',  icon:'🔄', accent:'#65A428' },
+    { label:'Tasa conexión usuario',      value: tasaQR + '%', unit:'usuarios / escaneos QR', icon:'📶', accent:'#BCCF00' },
+    { label:'Voltaje promedio batería',   value:'12.6',        unit:'V',                      icon:'🔋', accent:'#65A428' },
+    { label:'Voltaje promedio panel',     value:'18.4',        unit:'V',                      icon:'☀️', accent:'#BCCF00' },
+    { label:'Temperatura promedio',       value:'28.3',        unit:'°C',                     icon:'🌡️', accent:'#65A428' },
+    { label:'Humedad promedio',           value:'62',          unit:'%',                      icon:'💧', accent:'#BCCF00' },
+    { label:'Corriente promedio sistema', value:'2.8',         unit:'A',                      icon:'⚡', accent:'#65A428' },
+  ]);
+
+  const nDias    = dias14.length;
+  const usersDia = dias14.map(() => R(30, 90));
+  const qrDia    = dias14.map(() => Math.round(qrTotal / nDias));
+
+  mkBar('c-qr', dias14, [
+    { label:'Escaneos QR', data: qrDia,    bg:'#BCCF00' },
+    { label:'Respuestas',  data: usersDia, bg:'#65A428' },
+  ]);
+  mkLine('c-users', dias14, [
+    { label:'Respuestas',          data: usersDia, color:'#65A428', dash:[4,4] },
+    { label:'Usuarios conectados', data: usersDia, color:'#3ea8c8', dash:[]   },
+  ]);
+
+  const batD = h24.map((_, i) => Rf(11.8 + Math.sin(i/3)*0.7, 12.8 + Math.sin(i/3)*0.7, 2));
+  mkLine('c-voltage', h24, [{ label:'Voltaje batería (V)', data:batD, color:'#BCCF00', dash:[] }]);
+
+  const prdD = h24.map(() => Rf(0.0004, 0.0020, 6));
+  const cnsD = prdD.map(v => +(v * 0.76 + Rf(0, 0.0002, 6)).toFixed(6));
+  mkBar('c-energy', h24, [
+    { label:'Producción kWh', data:prdD, bg:'#BCCF00' },
+    { label:'Consumo kWh',    data:cnsD, bg:'#e87040' },
+  ]);
+
+  const tmpD = h24.map((_, i) => Rf(24 + Math.sin(i/4)*5, 30 + Math.sin(i/4)*5, 1));
+  const humD = h24.map((_, i) => Rf(55 + Math.cos(i/4)*10, 65 + Math.cos(i/4)*10, 1));
+  mkDual('c-amb', h24, tmpD, humD);
 
   const devsDemo = [
-    {device_id:'101',avg_bat:12.8,prod_kwh:38.6,cons_kwh:29.4,usuarios:743,bat_pct:85},
-    {device_id:'102',avg_bat:12.4,prod_kwh:32.1,cons_kwh:27.8,usuarios:590,bat_pct:62},
-    {device_id:'201',avg_bat:11.9,prod_kwh:22.5,cons_kwh:21.0,usuarios:280,bat_pct:38},
-    {device_id:'301',avg_bat:12.9,prod_kwh:35.2,cons_kwh:28.9,usuarios:864,bat_pct:90},
-    {device_id:'302',avg_bat:11.2,prod_kwh:15.2,cons_kwh:18.9,usuarios:102,bat_pct:18},
-    {device_id:'401',avg_bat:12.5,prod_kwh:30.1,cons_kwh:24.8,usuarios:580,bat_pct:66},
+    { device_id:'101', avg_bat:12.8, prod_kwh:0.0386, cons_kwh:0.0294, usuarios:743, bat_pct:85, qr:1284, resp:743 },
+    { device_id:'102', avg_bat:12.4, prod_kwh:0.0321, cons_kwh:0.0278, usuarios:590, bat_pct:62, qr:956,  resp:590 },
+    { device_id:'201', avg_bat:11.9, prod_kwh:0.0225, cons_kwh:0.0210, usuarios:280, bat_pct:38, qr:672,  resp:280 },
+    { device_id:'301', avg_bat:12.9, prod_kwh:0.0352, cons_kwh:0.0289, usuarios:864, bat_pct:90, qr:1169, resp:864 },
+    { device_id:'302', avg_bat:11.2, prod_kwh:0.0152, cons_kwh:0.0189, usuarios:102, bat_pct:18, qr:380,  resp:102 },
+    { device_id:'401', avg_bat:12.5, prod_kwh:0.0301, cons_kwh:0.0248, usuarios:580, bat_pct:66, qr:959,  resp:580 },
   ];
-  renderTablaDispositivos(devsDemo);
-  renderStatusCards(devsDemo);
+  const filtered = device === 'Todos' ? devsDemo
+    : devsDemo.filter(d => d.device_id === device);
+  renderTabla(filtered);
+  renderStatus(filtered);
 }
 
-/* ══════════════════════════════════════
-   HELPERS DE RENDER
-══════════════════════════════════════ */
-function renderKpis(kpis, containerId) {
-  const g = document.getElementById(containerId);
+/* ══════════════════════════════════════════════════════
+   RENDER HELPERS
+══════════════════════════════════════════════════════ */
+function renderKpis(id, kpis) {
+  const g = document.getElementById(id);
   g.innerHTML = '';
   kpis.forEach(k => {
     g.innerHTML += `<div class="kpi" style="--accent:${k.accent}">
@@ -708,125 +645,146 @@ function renderKpis(kpis, containerId) {
   });
 }
 
-function renderTablaDispositivos(rows) {
-  const tbody = document.getElementById('perf-tbody');
+function renderTabla(rows) {
+  const tbody = document.getElementById('tbl-body');
   tbody.innerHTML = '';
   rows.forEach(d => {
-    const prod = parseFloat(d.prod_kwh)||0;
-    const cons = parseFloat(d.cons_kwh)||0;
-    const eff  = prod > 0 ? Math.round(cons/prod*100) : 0;
-    const bat  = parseInt(d.bat_pct)||0;
+    const prod   = parseFloat(d.prod_kwh) || 0;
+    const cons   = parseFloat(d.cons_kwh) || 0;
+    const eff    = prod > 0 ? Math.round(cons / prod * 100) : 0;
+    const bat    = Math.min(100, Math.max(0, Math.round(parseFloat(d.bat_pct) || 0)));
+    const us     = parseInt(d.usuarios) || 0;
+    const qr     = parseInt(d.qr)   !== undefined ? parseInt(d.qr)   : (qrManual[d.device_id] || 0);
+    const resp   = parseInt(d.resp) !== undefined ? parseInt(d.resp) : us;
     const bstate = bat > 60 ? 'Óptimo' : bat > 30 ? 'Bajo' : 'Crítico';
     const bcls   = bat > 60 ? 'status-ok' : bat > 30 ? 'status-warn' : 'status-bad';
     tbody.innerHTML += `<tr>
-      <td style="color:#BCCF00;font-weight:500;">${d.device_id}</td>
-      <td>—</td>
-      <td>—</td>
-      <td>${(parseInt(d.usuarios)||0).toLocaleString()}</td>
-      <td>${prod.toFixed(2)}</td>
-      <td>${cons.toFixed(2)}</td>
-      <td><span class="efficiency-bar" style="width:${eff*0.6}px;"></span>${eff}%</td>
+      <td style="color:#BCCF00;font-weight:600;">${d.device_id}</td>
+      <td>${qr.toLocaleString()}</td>
+      <td>${resp.toLocaleString()}</td>
+      <td>${us.toLocaleString()}</td>
+      <td>${prod.toFixed(4)}</td>
+      <td>${cons.toFixed(4)}</td>
+      <td><span class="eff-bar" style="width:${Math.min(eff,100)*0.5}px;"></span>${eff}%</td>
       <td><span class="status-badge ${bcls}">${bstate} (${bat}%)</span></td>
     </tr>`;
   });
 }
 
-function renderStatusCards(rows) {
+function renderStatus(rows) {
   const g = document.getElementById('status-grid');
   g.innerHTML = '';
   rows.forEach(d => {
-    const bat  = parseInt(d.bat_pct)||0;
-    const prod = parseFloat(d.prod_kwh)||0;
-    const cons = parseFloat(d.cons_kwh)||0;
-    const eff  = prod > 0 ? Math.round(cons/prod*100) : 0;
+    const bat    = Math.min(100, Math.max(0, Math.round(parseFloat(d.bat_pct) || 0)));
+    const prod   = parseFloat(d.prod_kwh) || 0;
+    const cons   = parseFloat(d.cons_kwh) || 0;
+    const eff    = prod > 0 ? Math.round(cons / prod * 100) : 0;
+    const us     = parseInt(d.usuarios) || 0;
     const bstate = bat > 60 ? 'Óptimo' : bat > 30 ? 'Bajo' : 'Crítico';
     const bcls   = bat > 60 ? 'status-ok' : bat > 30 ? 'status-warn' : 'status-bad';
+    const batCol = bat > 60 ? '#65A428' : bat > 30 ? '#e8b84b' : '#e27070';
     g.innerHTML += `<div class="status-card">
       <div class="status-header">
         <div class="status-name">Banca ${d.device_id}</div>
         <span class="status-badge ${bcls}">${bstate}</span>
       </div>
-      <div class="bar-row"><span class="bar-label">Batería</span>
-        <div class="bar-bg"><div class="bar-fill" style="width:${bat}%;background:${bat>60?'#65A428':bat>30?'#e8b84b':'#e27070'};"></div></div>
+      <div class="bar-row">
+        <span class="bar-label">Batería</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:${bat}%;background:${batCol};"></div></div>
         <span class="bar-val">${bat}%</span>
       </div>
-      <div class="bar-row"><span class="bar-label">Eficiencia</span>
+      <div class="bar-row">
+        <span class="bar-label">Eficiencia</span>
         <div class="bar-bg"><div class="bar-fill" style="width:${Math.min(eff,100)}%;background:#BCCF00;"></div></div>
         <span class="bar-val">${eff}%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Usuarios</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:${Math.min(us, 200) * 0.5}%;background:#3ea8c8;"></div></div>
+        <span class="bar-val">${us}</span>
       </div>
     </div>`;
   });
 }
 
-/* ── Chart helpers ── */
-const gridColor = 'rgba(101,164,40,0.12)';
-const tickColor = '#65A428';
-const gridOpts = {color:gridColor};
-const tickOpts = {color:tickColor, font:{size:10}};
+/* ══════════════════════════════════════════════════════
+   CHART HELPERS
+══════════════════════════════════════════════════════ */
+const GC  = 'rgba(101,164,40,0.12)';
+const TC  = '#65A428';
+const GO  = { color: GC };
+const TK  = { color: TC, font: { size: 10 } };
 
-function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
-}
+function kill(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
 
-function renderBarChart(id, labels, datasets) {
-  destroyChart(id);
+function mkBar(id, labels, datasets) {
+  kill(id);
   charts[id] = new Chart(document.getElementById(id), {
-    type:'bar',
-    data:{ labels, datasets: datasets.map(d=>({label:d.label,data:d.data,backgroundColor:d.bg,borderRadius:3})) },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:gridOpts,ticks:{...tickOpts,autoSkip:true,maxRotation:45}},
-        y:{grid:gridOpts,ticks:tickOpts}
-      }
-    }
-  });
-}
-
-function renderLineChart(id, labels, datasets) {
-  destroyChart(id);
-  charts[id] = new Chart(document.getElementById(id), {
-    type:'line',
-    data:{ labels, datasets: datasets.map(d=>({
-      label:d.label, data:d.data, borderColor:d.color,
-      backgroundColor: d.color+'22', fill:true, tension:.35,
-      pointRadius:2, borderDash:d.dash||[]
+    type: 'bar',
+    data: { labels, datasets: datasets.map(d => ({
+      label: d.label, data: d.data, backgroundColor: d.bg, borderRadius: 3
     })) },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:gridOpts,ticks:{...tickOpts,autoSkip:true,maxRotation:45}},
-        y:{grid:gridOpts,ticks:tickOpts}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: GO, ticks: { ...TK, autoSkip: true, maxRotation: 45 } },
+        y: { grid: GO, ticks: TK }
       }
     }
   });
 }
 
-function renderDualAxis(id, labels, tempData, humData) {
-  destroyChart(id);
+function mkLine(id, labels, datasets) {
+  kill(id);
   charts[id] = new Chart(document.getElementById(id), {
-    type:'line',
-    data:{ labels, datasets:[
-      {label:'Temperatura',data:tempData,borderColor:'#e87040',backgroundColor:'rgba(232,112,64,0.08)',fill:true,tension:.4,pointRadius:2,yAxisID:'y'},
-      {label:'Humedad',data:humData,borderColor:'#3ea8c8',backgroundColor:'rgba(62,168,200,0.08)',fill:true,tension:.4,pointRadius:2,yAxisID:'y2'},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:gridOpts,ticks:{...tickOpts,autoSkip:true,maxTicksLimit:8}},
-        y:{grid:gridOpts,ticks:tickOpts,position:'left',min:15,max:45,
-          title:{display:true,text:'°C',color:tickColor,font:{size:9}}},
-        y2:{grid:{display:false},ticks:tickOpts,position:'right',min:30,max:100,
-          title:{display:true,text:'%',color:tickColor,font:{size:9}}}
+    type: 'line',
+    data: { labels, datasets: datasets.map(d => ({
+      label: d.label, data: d.data,
+      borderColor: d.color, backgroundColor: d.color + '22',
+      fill: true, tension: .35, pointRadius: 2, borderDash: d.dash || []
+    })) },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: GO, ticks: { ...TK, autoSkip: true, maxRotation: 45 } },
+        y: { grid: GO, ticks: TK }
       }
     }
   });
 }
 
-// Permitir actualizar con filtros
-document.getElementById('sel-device').addEventListener('change', cargarDatos);
-document.getElementById('date-start').addEventListener('change', cargarDatos);
-document.getElementById('date-end').addEventListener('change', cargarDatos);
+function mkDual(id, labels, tData, hData) {
+  kill(id);
+  charts[id] = new Chart(document.getElementById(id), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label:'Temperatura', data: tData, borderColor:'#e87040', backgroundColor:'rgba(232,112,64,.08)',
+        fill:true, tension:.4, pointRadius:2, yAxisID:'y' },
+      { label:'Humedad',     data: hData, borderColor:'#3ea8c8', backgroundColor:'rgba(62,168,200,.08)',
+        fill:true, tension:.4, pointRadius:2, yAxisID:'y2' },
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x:  { grid: GO, ticks: { ...TK, autoSkip:true, maxTicksLimit:8 } },
+        y:  { grid: GO, ticks: TK, position:'left',  min:15, max:45,
+              title:{ display:true, text:'°C', color:TC, font:{size:9} } },
+        y2: { grid:{ display:false }, ticks: TK, position:'right', min:30, max:100,
+              title:{ display:true, text:'%', color:TC, font:{size:9} } }
+      }
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   ESCUCHAR CAMBIOS DE FILTRO — recargar datos al instante
+══════════════════════════════════════════════════════ */
+['sel-device','date-start','date-end'].forEach(id =>
+  document.getElementById(id).addEventListener('change', cargarDatos)
+);
 </script>
 </body>
 </html>
