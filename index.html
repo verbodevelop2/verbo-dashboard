@@ -26,8 +26,6 @@
     .cfg-note{font-size:11px;color:#5a8a70;margin-top:-6px;margin-bottom:1rem;line-height:1.5;}
     .cfg-unit{background:#12352c;border:1px solid #1e4a38;border-radius:10px;padding:12px;}
     .cfg-sep{border:none;border-top:1px solid #1e4a38;margin:1.2rem 0;}
-    .cfg-error{background:#3a1010;color:#e27070;font-size:11px;padding:8px 12px;
-      border-radius:6px;margin-bottom:1rem;display:none;}
     .cfg-btns{display:flex;flex-direction:column;gap:8px;margin-top:1rem;}
     .btn-primary{background:#65A428;color:#10312B;font-size:13px;font-weight:700;
       padding:11px;border:none;border-radius:8px;cursor:pointer;letter-spacing:1px;width:100%;}
@@ -38,7 +36,6 @@
 
     /* ══ DASHBOARD ══ */
     .dash{background:#10312B;min-height:100vh;color:#fff;}
-
     .hdr{background:linear-gradient(135deg,#10312B 0%,#1a4a3a 60%,#10312B 100%);
       border-bottom:2px solid #65A428;padding:1.2rem 1.5rem;
       display:flex;align-items:center;gap:1rem;}
@@ -60,8 +57,6 @@
     .src-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:6px;}
     .src-live{background:#1a4a3a;color:#BCCF00;}
     .src-demo{background:#2a2a0a;color:#e8b84b;}
-
-    /* filters bar */
     .fbar{background:#0d2922;border-bottom:1px solid #1e4a38;padding:.8rem 1.5rem;
       display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
     .flbl{font-size:11px;color:#65A428;letter-spacing:1px;text-transform:uppercase;}
@@ -74,20 +69,14 @@
       padding:5px 14px;border:none;border-radius:6px;cursor:pointer;letter-spacing:1px;}
     .btn-reload:hover{background:#BCCF00;}
     .btn-reload:disabled{background:#1e4a38;color:#5a8a70;cursor:not-allowed;}
-
-    /* loading */
     .lbar{height:3px;background:#1e4a38;position:relative;overflow:hidden;display:none;}
     .lbar.on{display:block;}
     .lbar::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;
       background:linear-gradient(90deg,transparent,#BCCF00,transparent);animation:sweep 1s infinite;}
     @keyframes sweep{to{left:140%;}}
-
-    /* main */
     .main{padding:1.2rem 1.5rem;}
     .sec-title{font-size:11px;color:#BCCF00;letter-spacing:2px;text-transform:uppercase;
       margin-bottom:.8rem;padding-left:4px;border-left:3px solid #65A428;}
-
-    /* KPI */
     .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
       gap:10px;margin-bottom:1.4rem;}
     .kpi{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;
@@ -98,8 +87,6 @@
     .kpi-val{font-size:22px;font-weight:700;color:#fff;line-height:1;}
     .kpi-unit{font-size:11px;color:#BCCF00;margin-top:3px;}
     .kpi-ico{position:absolute;right:10px;top:10px;font-size:18px;opacity:.45;}
-
-    /* charts */
     .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.4rem;}
     .cc{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;padding:1rem;}
     .ct{font-size:11px;color:#BCCF00;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.8rem;}
@@ -108,8 +95,6 @@
     .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;}
     .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#9ab;}
     .leg-dot{width:10px;height:10px;border-radius:2px;}
-
-    /* status */
     .sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
       gap:10px;margin-bottom:1.4rem;}
     .sc{background:#0d2922;border:1px solid #1e4a38;border-radius:10px;padding:.9rem 1rem;}
@@ -124,8 +109,6 @@
     .br-bg{flex:1;height:6px;background:#1e4a38;border-radius:3px;overflow:hidden;}
     .br-fill{height:100%;border-radius:3px;transition:width .5s;}
     .br-val{font-size:10px;color:#fff;width:40px;text-align:right;flex-shrink:0;}
-
-    /* table */
     .twrap{overflow-x:auto;}
     table{width:100%;border-collapse:collapse;font-size:12px;}
     th{text-align:left;padding:6px 10px;font-size:10px;color:#65A428;
@@ -134,7 +117,6 @@
     tr:hover td{background:#132e24;}
     .ebar{display:inline-block;height:6px;border-radius:3px;background:#65A428;
       vertical-align:middle;margin-right:4px;}
-
     @media(max-width:640px){
       .cgrid{grid-template-columns:1fr;}
       .kpi-val{font-size:18px;}
@@ -146,23 +128,14 @@
 <body>
 
 <!-- ══════════════════════════════════════════
-     PANEL DE CONFIGURACIÓN
+     PANEL DE CONFIGURACIÓN (solo QR y Respuestas)
 ══════════════════════════════════════════ -->
 <div class="cfg-overlay" id="cfg-overlay">
   <div class="cfg-box">
-    <div class="cfg-title">Configuración de conexión</div>
-    <div class="cfg-sub">Google BigQuery — Verbo Tech</div>
-    <div class="cfg-error" id="cfg-err"></div>
+    <div class="cfg-title">Configuración de unidades</div>
+    <div class="cfg-sub">Verbo Tech — Solar Monitoring Dashboard</div>
 
-    <label class="cfg-lbl">URL del Apps Script (Web App)</label>
-    <input class="cfg-inp" id="cfg-url"
-      placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
-    <p class="cfg-note">Despliega tu Apps Script como Web App:
-      <b>Ejecutar como: Yo</b> — <b>Acceso: Cualquier usuario</b>. Pega la URL aquí.</p>
-
-    <hr class="cfg-sep">
-
-    <label class="cfg-lbl">Configuración de unidades — Escaneos QR y Respuestas</label>
+    <label class="cfg-lbl">Escaneos QR y Respuestas registradas por unidad</label>
     <p class="cfg-note" style="margin-bottom:.8rem;">
       Ingresa manualmente el total de escaneos QR y respuestas registradas por unidad en el periodo.
       Estos valores aparecen en KPIs, gráficas y tabla de rendimiento.
@@ -217,7 +190,7 @@
     <input class="cfg-inp" id="cfg-min" type="number" value="5" min="1" max="60" style="width:110px;">
 
     <div class="cfg-btns">
-      <button class="btn-primary"   onclick="conectar()">✓ Conectar a BigQuery</button>
+      <button class="btn-primary"   onclick="guardarConfig()">✓ Guardar y conectar</button>
       <button class="btn-secondary" onclick="usarDemo()">Usar datos de demostración</button>
     </div>
   </div>
@@ -227,7 +200,6 @@
      DASHBOARD
 ══════════════════════════════════════════ -->
 <div class="dash" id="dashboard" style="display:none;">
-
   <div class="hdr">
     <div class="logo-wrap">
       <img src="logo-verbo.png" class="logo-img"
@@ -282,11 +254,9 @@
   </div>
 
   <div class="main">
-
     <div class="sec-title">Métricas del periodo</div>
     <div class="kpi-grid" id="kpi-main"></div>
 
-    <!-- Gráfica 1: QR vs Respuestas | Gráfica 2: Respuestas vs Usuarios -->
     <div class="cgrid">
       <div class="cc">
         <div class="ct">Escaneos QR vs Respuestas registradas — por día</div>
@@ -306,17 +276,16 @@
       </div>
     </div>
 
-    <!-- Gráfica 3: Voltaje batería por día | Gráfica 4: Producción vs Consumo por día -->
     <div class="cgrid">
       <div class="cc">
-        <div class="ct" id="ct-volt">Voltaje promedio de batería (V) — por día del periodo</div>
+        <div class="ct">Voltaje promedio de batería (V) — por día del periodo</div>
         <div class="cw"><canvas id="c-volt"></canvas></div>
         <div class="legend">
           <span class="leg-item"><span class="leg-dot" style="background:#BCCF00;"></span>Voltaje batería (V)</span>
         </div>
       </div>
       <div class="cc">
-        <div class="ct" id="ct-ener">Producción vs Consumo energético (kWh) — por día del periodo</div>
+        <div class="ct">Producción vs Consumo energético (kWh) — por día del periodo</div>
         <div class="cw"><canvas id="c-ener"></canvas></div>
         <div class="legend">
           <span class="leg-item"><span class="leg-dot" style="background:#BCCF00;"></span>Producción kWh</span>
@@ -325,7 +294,6 @@
       </div>
     </div>
 
-    <!-- Gráfica 5: Temperatura y Humedad por día -->
     <div class="wcard">
       <div class="ct" style="margin-bottom:.9rem;">Temperatura y Humedad promedio — por día del periodo</div>
       <div class="cw" style="height:160px;"><canvas id="c-amb"></canvas></div>
@@ -343,14 +311,9 @@
       <div class="twrap">
         <table>
           <thead><tr>
-            <th>Dispositivo</th>
-            <th>QR Escaneados</th>
-            <th>Respuestas</th>
-            <th>Usuarios conectados</th>
-            <th>Producción kWh</th>
-            <th>Consumo kWh</th>
-            <th>Eficiencia</th>
-            <th>Estado batería</th>
+            <th>Dispositivo</th><th>QR Escaneados</th><th>Respuestas</th>
+            <th>Usuarios conectados</th><th>Producción kWh</th><th>Consumo kWh</th>
+            <th>Eficiencia</th><th>Estado batería</th>
           </tr></thead>
           <tbody id="tbl"></tbody>
         </table>
@@ -359,19 +322,23 @@
 
     <div class="sec-title" style="margin-top:1.2rem;">Indicadores adicionales</div>
     <div class="kpi-grid" id="kpi-extra"></div>
-
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 /* ════════════════════════════════════════════
+   ▼▼▼  ÚNICA LÍNEA QUE DEBES EDITAR  ▼▼▼
+   Pega aquí la URL de tu Apps Script desplegado
+════════════════════════════════════════════ */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTNVsTcJ_JBDzAHGsDaxpTLn_LH1HQmMdQobwZy_hS7OgbrrSY4coQOiBtSOrVDuMPvw/exec";
+
+/* ════════════════════════════════════════════
    ESTADO GLOBAL
 ════════════════════════════════════════════ */
-const DEVS = ['101','102','201','301','302','401'];
-let URL_AS  = '';
-let qrMap   = {};   // QR manuales por dispositivo
-let respMap = {};   // Respuestas manuales por dispositivo
+const DEVS  = ['101','102','201','301','302','401'];
+let qrMap   = {};
+let respMap = {};
 let refMin  = 5;
 let isDemo  = false;
 let charts  = {};
@@ -382,19 +349,20 @@ DEVS.forEach(d => { qrMap[d] = 0; respMap[d] = 0; });
    INIT
 ════════════════════════════════════════════ */
 window.onload = () => {
+  // Fechas por defecto: últimos 30 días
   const hoy = new Date(), h30 = new Date();
   h30.setDate(hoy.getDate() - 30);
   document.getElementById('d-end').value   = iso(hoy);
   document.getElementById('d-start').value = iso(h30);
 
-  const saved = localStorage.getItem('vt_cfg3');
+  // Restaurar QR/Respuestas guardados
+  const saved = localStorage.getItem('vt_qr_resp');
   if (saved) {
     try {
       const c = JSON.parse(saved);
-      URL_AS = c.url || ''; refMin = c.min || 5;
+      refMin = c.min || 5;
       if (c.qr)   Object.assign(qrMap,   c.qr);
       if (c.resp) Object.assign(respMap, c.resp);
-      document.getElementById('cfg-url').value = URL_AS;
       document.getElementById('cfg-min').value = refMin;
       DEVS.forEach(k => {
         const qE = document.getElementById('qr-'+k);
@@ -402,59 +370,48 @@ window.onload = () => {
         if (qE) qE.value = qrMap[k]   || '';
         if (rE) rE.value = respMap[k] || '';
       });
-      if (URL_AS) {
-        isDemo = false;
-        showDash('BigQuery','src-live');
-        cargar(); startTimer(); return;
-      }
     } catch(e) {}
   }
-  document.getElementById('cfg-overlay').classList.add('open');
+
+  // Arrancar directo con BigQuery — sin pedir URL
+  isDemo = false;
+  showDash('BigQuery', 'src-live');
+  cargar();
+  startTimer();
 };
 
 const iso = d => d.toISOString().split('T')[0];
 
 /* ════════════════════════════════════════════
-   CONFIG
+   CONFIG  (solo QR / Respuestas)
 ════════════════════════════════════════════ */
 function abrirCfg() {
   document.getElementById('cfg-overlay').classList.add('open');
 }
 
-function conectar() {
-  const err = document.getElementById('cfg-err');
-  err.style.display = 'none';
-
-  URL_AS = document.getElementById('cfg-url').value.trim();
+function guardarConfig() {
   refMin = parseInt(document.getElementById('cfg-min').value) || 5;
   DEVS.forEach(k => {
     qrMap[k]   = parseInt(document.getElementById('qr-'+k).value)   || 0;
     respMap[k] = parseInt(document.getElementById('resp-'+k).value) || 0;
   });
-
-  if (!URL_AS) {
-    err.textContent = 'Ingresa la URL del Apps Script.';
-    err.style.display = 'block'; return;
-  }
-
-  localStorage.setItem('vt_cfg3', JSON.stringify({url:URL_AS, min:refMin, qr:qrMap, resp:respMap}));
-  isDemo = false;
+  localStorage.setItem('vt_qr_resp', JSON.stringify({ min: refMin, qr: qrMap, resp: respMap }));
   document.getElementById('cfg-overlay').classList.remove('open');
-  showDash('BigQuery','src-live');
-  cargar(); startTimer();
+  cargar();
+  startTimer();
 }
 
 function usarDemo() {
   isDemo = true;
   document.getElementById('cfg-overlay').classList.remove('open');
-  showDash('DEMO','src-demo');
+  showDash('DEMO', 'src-demo');
   cargar();
 }
 
 function showDash(label, cls) {
   document.getElementById('dashboard').style.display = 'block';
   const b = document.getElementById('src-badge');
-  b.textContent = label; b.className = 'src-badge '+cls;
+  b.textContent = label; b.className = 'src-badge ' + cls;
 }
 
 function startTimer() {
@@ -472,10 +429,10 @@ async function cargar() {
   try {
     isDemo ? renderDemo() : await cargarReal();
     document.getElementById('ts').textContent =
-      new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      new Date().toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
   } catch(e) {
     console.error(e);
-    alert('Error al consultar:\n' + e.message);
+    alert('Error al consultar BigQuery:\n' + e.message);
   } finally {
     btn.disabled = false; bar.classList.remove('on');
   }
@@ -489,9 +446,9 @@ async function cargarReal() {
   const start = document.getElementById('d-start').value;
   const end   = document.getElementById('d-end').value;
 
-  const url = `${URL_AS}?device=${encodeURIComponent(dev)}&startDate=${start}&endDate=${end}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} al llamar Apps Script`);
+  const url = `${APPS_SCRIPT_URL}?device=${encodeURIComponent(dev)}&startDate=${start}&endDate=${end}`;
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
   if (data.error) throw new Error('Apps Script: ' + data.error);
 
@@ -504,115 +461,72 @@ async function cargarReal() {
 ════════════════════════════════════════════ */
 function renderTodo(data, dev, start, end) {
   const r   = data.resumen        || {};
-  const tl  = data.timeline       || [];    // [{dia, usuarios_dia}]
-  const epd = data.energiaPorDia  || [];    // [{dia, prod_kwh, cons_kwh, avg_bat}]  ← nuevo
+  const tl  = data.timeline       || [];
+  const epd = data.energiaPorDia  || [];
   const pd  = data.porDispositivo || [];
 
-  /* ── Valores de resumen ── */
   const usuarios = parseInt(r.sesiones_usuario) || 0;
   const prodKwh  = parseFloat(r.produccion_kwh) || 0;
   const consKwh  = parseFloat(r.consumo_kwh)    || 0;
   const efic     = prodKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
 
-  /* ── QR y Respuestas manuales ── */
   const qrTotal   = dev === 'Todos' ? DEVS.reduce((s,k) => s+(qrMap[k]||0),   0) : (qrMap[dev]||0);
   const respTotal = dev === 'Todos' ? DEVS.reduce((s,k) => s+(respMap[k]||0), 0) : (respMap[dev]||0);
 
   const iniStr = start.split('-').reverse().join('/');
   const finStr = end.split('-').reverse().join('/');
 
-  /* ── 8 KPIs principales ── */
   setKpis('kpi-main', [
-    {lbl:'Número de dispositivo',  val:dev,                       unit:'',                          ico:'📡', ac:'#65A428'},
-    {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),  unit:'total en periodo',          ico:'⬛', ac:'#BCCF00'},
-    {lbl:'Respuestas registradas', val:respTotal.toLocaleString(),unit:'total en periodo',          ico:'📋', ac:'#65A428'},
-    {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(), unit:'veces que supera 0.4 A',   ico:'👤', ac:'#BCCF00'},
-    {lbl:'Fecha inicio periodo',   val:iniStr,                    unit:'',                          ico:'📅', ac:'#65A428'},
-    {lbl:'Fecha fin periodo',      val:finStr,                    unit:'',                          ico:'📅', ac:'#BCCF00'},
-    {lbl:'Producción energética',  val:prodKwh.toFixed(4),       unit:'kWh',                       ico:'⚡', ac:'#BCCF00'},
-    {lbl:'Consumo energético',     val:consKwh.toFixed(4),       unit:'kWh',                       ico:'🔋', ac:'#65A428'},
+    {lbl:'Número de dispositivo',  val:dev,                       unit:'',                         ico:'📡', ac:'#65A428'},
+    {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),  unit:'total en periodo',         ico:'⬛', ac:'#BCCF00'},
+    {lbl:'Respuestas registradas', val:respTotal.toLocaleString(),unit:'total en periodo',         ico:'📋', ac:'#65A428'},
+    {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(), unit:'veces que supera 0.4 A',  ico:'👤', ac:'#BCCF00'},
+    {lbl:'Fecha inicio periodo',   val:iniStr,                    unit:'',                         ico:'📅', ac:'#65A428'},
+    {lbl:'Fecha fin periodo',      val:finStr,                    unit:'',                         ico:'📅', ac:'#BCCF00'},
+    {lbl:'Producción energética',  val:prodKwh.toFixed(4),       unit:'kWh',                      ico:'⚡', ac:'#BCCF00'},
+    {lbl:'Consumo energético',     val:consKwh.toFixed(4),       unit:'kWh',                      ico:'🔋', ac:'#65A428'},
   ]);
 
-  /* ── KPIs adicionales ── */
-  const tQR   = qrTotal   > 0 ? ((respTotal / qrTotal)  * 100).toFixed(1) : '—';
-  const tUser = qrTotal   > 0 ? ((usuarios  / qrTotal)  * 100).toFixed(1) : '—';
+  const tQR   = qrTotal > 0 ? ((respTotal/qrTotal)*100).toFixed(1) : '—';
+  const tUser = qrTotal > 0 ? ((usuarios/qrTotal)*100).toFixed(1)  : '—';
   setKpis('kpi-extra', [
-    {lbl:'Rendimiento energético',     val:efic+'%',             unit:'consumo / producción',   ico:'📊', ac:'#BCCF00'},
-    {lbl:'Tasa QR → Respuesta',        val:tQR+'%',              unit:'respuestas / escaneos',  ico:'🔄', ac:'#65A428'},
-    {lbl:'Tasa conexión usuario',      val:tUser+'%',            unit:'usuarios / escaneos',    ico:'📶', ac:'#BCCF00'},
-    {lbl:'Voltaje promedio batería',   val:fv(r.avg_voltaje_bat),    unit:'V',                  ico:'🔋', ac:'#65A428'},
-    {lbl:'Voltaje promedio panel',     val:fv(r.avg_voltaje_panel),  unit:'V',                  ico:'☀️', ac:'#BCCF00'},
-    {lbl:'Temperatura promedio',       val:fv(r.avg_temp),           unit:'°C',                 ico:'🌡️', ac:'#65A428'},
-    {lbl:'Humedad promedio',           val:fv(r.avg_humedad),        unit:'%',                  ico:'💧', ac:'#BCCF00'},
-    {lbl:'Corriente promedio sistema', val:fv(r.avg_corriente),      unit:'A',                  ico:'⚡', ac:'#65A428'},
+    {lbl:'Rendimiento energético',     val:efic+'%',                unit:'consumo / producción',  ico:'📊', ac:'#BCCF00'},
+    {lbl:'Tasa QR → Respuesta',        val:tQR+'%',                 unit:'respuestas / escaneos', ico:'🔄', ac:'#65A428'},
+    {lbl:'Tasa conexión usuario',      val:tUser+'%',               unit:'usuarios / escaneos',   ico:'📶', ac:'#BCCF00'},
+    {lbl:'Voltaje promedio batería',   val:fv(r.avg_voltaje_bat),   unit:'V',                     ico:'🔋', ac:'#65A428'},
+    {lbl:'Voltaje promedio panel',     val:fv(r.avg_voltaje_panel), unit:'V',                     ico:'☀️', ac:'#BCCF00'},
+    {lbl:'Temperatura promedio',       val:fv(r.avg_temp),          unit:'°C',                    ico:'🌡️', ac:'#65A428'},
+    {lbl:'Humedad promedio',           val:fv(r.avg_humedad),       unit:'%',                     ico:'💧', ac:'#BCCF00'},
+    {lbl:'Corriente promedio sistema', val:fv(r.avg_corriente),     unit:'A',                     ico:'⚡', ac:'#65A428'},
   ]);
 
-  /* ══════════════════════════════════════════
-     GRÁFICAS — todas usan el PERIODO completo
-  ══════════════════════════════════════════ */
+  // Días del periodo como eje X de todas las gráficas
+  const diasSet = new Set([...tl.map(t => t.dia||''), ...epd.map(e => e.dia||'')]);
+  const diasAll = [...diasSet].filter(Boolean).sort();
+  const diasLbl = diasAll.map(d => d.length >= 10 ? d.substring(5) : d);
 
-  /* ── Días disponibles (unión de timeline y energiaPorDia) ── */
-  const diasSet = new Set([
-    ...tl.map(t => t.dia||''),
-    ...epd.map(e => e.dia||'')
-  ]);
-  const diasAll = [...diasSet].sort();
-  // Etiqueta corta MM-DD
-  const diasLabel = diasAll.map(d => d.length >= 10 ? d.substring(5) : d);
-
-  /* ── Mapa rápido de timeline ── */
   const tlMap  = {};  tl.forEach(t  => { if(t.dia)  tlMap[t.dia]  = t; });
   const epdMap = {};  epd.forEach(e => { if(e.dia)  epdMap[e.dia] = e; });
 
-  /* ── Gráfica 1: QR vs Respuestas (por día) ── */
-  const nDias   = diasAll.length || 1;
-  const qrDia   = diasAll.map(() => Math.round(qrTotal   / nDias));
-  const respDia = diasAll.map(() => Math.round(respTotal / nDias));
-
-  mkBar('c-qr', diasLabel, [
-    {label:'Escaneos QR',          data:qrDia,   bg:'#BCCF00'},
-    {label:'Respuestas',           data:respDia, bg:'#65A428'},
-  ]);
-
-  /* ── Gráfica 2: Respuestas vs Usuarios por día ── */
+  const n       = diasAll.length || 1;
+  const qrDia   = diasAll.map(() => Math.round(qrTotal   / n));
+  const respDia = diasAll.map(() => Math.round(respTotal / n));
   const uDia    = diasAll.map(d => parseInt((tlMap[d]||{}).usuarios_dia)||0);
-  mkLine('c-users', diasLabel, [
-    {label:'Respuestas',          data:respDia, color:'#65A428', dash:[4,4]},
-    {label:'Usuarios conectados', data:uDia,    color:'#3ea8c8', dash:[]},
-  ]);
-
-  /* ── Gráfica 3: Voltaje batería por día del periodo ── */
   const batDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_bat)  || 0);
-  mkLine('c-volt', diasLabel, [
-    {label:'Voltaje batería (V)', data:batDia, color:'#BCCF00', dash:[]},
-  ]);
-
-  /* ── Gráfica 4: Producción vs Consumo por día del periodo ── */
   const prdDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).prod_kwh) || 0);
   const cnsDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).cons_kwh) || 0);
-  mkBar('c-ener', diasLabel, [
-    {label:'Producción kWh', data:prdDia, bg:'#BCCF00'},
-    {label:'Consumo kWh',    data:cnsDia, bg:'#e87040'},
-  ]);
+  const tmpDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_temp) || 0);
+  const humDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_hum)  || 0);
 
-  /* ── Gráfica 5: Temperatura y Humedad — necesitamos datos diarios
-       Como el Apps Script devuelve avg_temp/avg_hum en energiaPorDia
-       los usamos; si no están, dejamos 0 ── */
-  const tmpDia = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_temp) || 0);
-  const humDia = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_hum)  || 0);
-  mkDual('c-amb', diasLabel, tmpDia, humDia);
+  mkBar('c-qr',   diasLbl, [{label:'Escaneos QR',data:qrDia,bg:'#BCCF00'},{label:'Respuestas',data:respDia,bg:'#65A428'}]);
+  mkLine('c-users',diasLbl, [{label:'Respuestas',data:respDia,color:'#65A428',dash:[4,4]},{label:'Usuarios',data:uDia,color:'#3ea8c8',dash:[]}]);
+  mkLine('c-volt', diasLbl, [{label:'Voltaje (V)',data:batDia,color:'#BCCF00',dash:[]}]);
+  mkBar('c-ener',  diasLbl, [{label:'Producción kWh',data:prdDia,bg:'#BCCF00'},{label:'Consumo kWh',data:cnsDia,bg:'#e87040'}]);
+  mkDual('c-amb',  diasLbl, tmpDia, humDia);
 
-  /* ── Tabla y status ── */
-  const pdEnriq = pd.map(d => ({
-    ...d,
-    qr:   qrMap[d.device_id]   || 0,
-    resp: respMap[d.device_id] || 0,
-  }));
-  const pdFilt = dev === 'Todos' ? pdEnriq
-    : pdEnriq.filter(d => d.device_id === dev);
-
-  setTabla(pdFilt);
-  setStatus(pdFilt);
+  const pdE = pd.map(d => ({...d, qr:qrMap[d.device_id]||0, resp:respMap[d.device_id]||0}));
+  const pdF = dev === 'Todos' ? pdE : pdE.filter(d => d.device_id === dev);
+  setTabla(pdF); setStatus(pdF);
 }
 
 /* ════════════════════════════════════════════
@@ -625,66 +539,57 @@ function renderDemo() {
   const start = document.getElementById('d-start').value;
   const end   = document.getElementById('d-end').value;
 
-  // Generar días entre start y end
   const dias = [];
-  const cur = new Date(start);
-  const fin = new Date(end);
+  const cur = new Date(start), fin = new Date(end);
   while (cur <= fin) { dias.push(iso(cur)); cur.setDate(cur.getDate()+1); }
   const diasLbl = dias.map(d => d.substring(5));
 
-  const qrTotal   = dev==='Todos' ? DEVS.reduce((s,k) => s+(qrMap[k]||0), 0)   : (qrMap[dev]||1284);
+  const qrTotal   = dev==='Todos' ? DEVS.reduce((s,k) => s+(qrMap[k]||0),   0) : (qrMap[dev]||1284);
   const respTotal = dev==='Todos' ? DEVS.reduce((s,k) => s+(respMap[k]||0), 0) : (respMap[dev]||987);
-  const usuarios  = dev==='Todos' ? 2900 : 743;
+  const usuarios  = dev==='Todos' ? 2900  : 743;
   const prodKwh   = dev==='Todos' ? 0.2230 : 0.0381;
   const consKwh   = dev==='Todos' ? 0.1690 : 0.0290;
 
   setKpis('kpi-main',[
-    {lbl:'Número de dispositivo',  val:dev,                        unit:'',                    ico:'📡',ac:'#65A428'},
-    {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),   unit:'total en periodo',    ico:'⬛',ac:'#BCCF00'},
-    {lbl:'Respuestas registradas', val:respTotal.toLocaleString(), unit:'total en periodo',    ico:'📋',ac:'#65A428'},
+    {lbl:'Número de dispositivo',  val:dev,                        unit:'',                        ico:'📡',ac:'#65A428'},
+    {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),   unit:'total en periodo',        ico:'⬛',ac:'#BCCF00'},
+    {lbl:'Respuestas registradas', val:respTotal.toLocaleString(), unit:'total en periodo',        ico:'📋',ac:'#65A428'},
     {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(),  unit:'veces que supera 0.4 A', ico:'👤',ac:'#BCCF00'},
-    {lbl:'Fecha inicio periodo',   val:start.split('-').reverse().join('/'), unit:'',ico:'📅',ac:'#65A428'},
-    {lbl:'Fecha fin periodo',      val:end.split('-').reverse().join('/'),   unit:'',ico:'📅',ac:'#BCCF00'},
-    {lbl:'Producción energética',  val:prodKwh.toFixed(4),        unit:'kWh',                  ico:'⚡',ac:'#BCCF00'},
-    {lbl:'Consumo energético',     val:consKwh.toFixed(4),        unit:'kWh',                  ico:'🔋',ac:'#65A428'},
+    {lbl:'Fecha inicio periodo',   val:start.split('-').reverse().join('/'),unit:'',ico:'📅',ac:'#65A428'},
+    {lbl:'Fecha fin periodo',      val:end.split('-').reverse().join('/'),  unit:'',ico:'📅',ac:'#BCCF00'},
+    {lbl:'Producción energética',  val:prodKwh.toFixed(4),        unit:'kWh',                     ico:'⚡',ac:'#BCCF00'},
+    {lbl:'Consumo energético',     val:consKwh.toFixed(4),        unit:'kWh',                     ico:'🔋',ac:'#65A428'},
   ]);
-
-  const efic = Math.round(consKwh/prodKwh*100);
-  const tQR  = qrTotal > 0 ? ((respTotal/qrTotal)*100).toFixed(1) : '—';
-  const tUs  = qrTotal > 0 ? ((usuarios/qrTotal)*100).toFixed(1)  : '—';
+  const efic=Math.round(consKwh/prodKwh*100);
+  const tQR=qrTotal>0?((respTotal/qrTotal)*100).toFixed(1):'—';
+  const tUs=qrTotal>0?((usuarios/qrTotal)*100).toFixed(1):'—';
   setKpis('kpi-extra',[
     {lbl:'Rendimiento energético',     val:efic+'%', unit:'consumo / producción', ico:'📊',ac:'#BCCF00'},
     {lbl:'Tasa QR → Respuesta',        val:tQR+'%',  unit:'respuestas / escaneos',ico:'🔄',ac:'#65A428'},
     {lbl:'Tasa conexión usuario',      val:tUs+'%',  unit:'usuarios / escaneos',  ico:'📶',ac:'#BCCF00'},
-    {lbl:'Voltaje promedio batería',   val:'12.6',   unit:'V',                    ico:'🔋',ac:'#65A428'},
-    {lbl:'Voltaje promedio panel',     val:'18.4',   unit:'V',                    ico:'☀️',ac:'#BCCF00'},
-    {lbl:'Temperatura promedio',       val:'28.3',   unit:'°C',                   ico:'🌡️',ac:'#65A428'},
-    {lbl:'Humedad promedio',           val:'62',     unit:'%',                    ico:'💧',ac:'#BCCF00'},
-    {lbl:'Corriente promedio sistema', val:'2.8',    unit:'A',                    ico:'⚡',ac:'#65A428'},
+    {lbl:'Voltaje promedio batería',   val:'12.6',   unit:'V',  ico:'🔋',ac:'#65A428'},
+    {lbl:'Voltaje promedio panel',     val:'18.4',   unit:'V',  ico:'☀️',ac:'#BCCF00'},
+    {lbl:'Temperatura promedio',       val:'28.3',   unit:'°C', ico:'🌡️',ac:'#65A428'},
+    {lbl:'Humedad promedio',           val:'62',     unit:'%',  ico:'💧',ac:'#BCCF00'},
+    {lbl:'Corriente promedio sistema', val:'2.8',    unit:'A',  ico:'⚡',ac:'#65A428'},
   ]);
 
-  const n   = dias.length || 1;
-  const qrD = dias.map(() => Math.round(qrTotal/n));
-  const rpD = dias.map(() => Math.round(respTotal/n));
-  const uD  = dias.map(() => R(20,80));
-  mkBar('c-qr',   diasLbl, [{label:'Escaneos QR',data:qrD,bg:'#BCCF00'},{label:'Respuestas',data:rpD,bg:'#65A428'}]);
-  mkLine('c-users',diasLbl, [
-    {label:'Respuestas',          data:rpD, color:'#65A428',dash:[4,4]},
-    {label:'Usuarios conectados', data:uD,  color:'#3ea8c8',dash:[]},
-  ]);
+  const n=dias.length||1;
+  const qrD=dias.map(()=>Math.round(qrTotal/n));
+  const rpD=dias.map(()=>Math.round(respTotal/n));
+  const uD =dias.map(()=>R(20,80));
+  mkBar('c-qr',   diasLbl,[{label:'Escaneos QR',data:qrD,bg:'#BCCF00'},{label:'Respuestas',data:rpD,bg:'#65A428'}]);
+  mkLine('c-users',diasLbl,[{label:'Respuestas',data:rpD,color:'#65A428',dash:[4,4]},{label:'Usuarios',data:uD,color:'#3ea8c8',dash:[]}]);
+  const batD=dias.map((_,i)=>Rf(11.8+Math.sin(i/5)*.7,12.8+Math.sin(i/5)*.7,2));
+  mkLine('c-volt',diasLbl,[{label:'Voltaje (V)',data:batD,color:'#BCCF00',dash:[]}]);
+  const prdD=dias.map(()=>Rf(.002,.018,6));
+  const cnsD=prdD.map(v=>+(v*.76+Rf(0,.002,6)).toFixed(6));
+  mkBar('c-ener',diasLbl,[{label:'Producción kWh',data:prdD,bg:'#BCCF00'},{label:'Consumo kWh',data:cnsD,bg:'#e87040'}]);
+  const tmpD=dias.map((_,i)=>Rf(22+Math.sin(i/7)*5,32+Math.sin(i/7)*5,1));
+  const humD=dias.map((_,i)=>Rf(50+Math.cos(i/7)*12,72+Math.cos(i/7)*12,1));
+  mkDual('c-amb',diasLbl,tmpD,humD);
 
-  const batD = dias.map((_,i) => Rf(11.8+Math.sin(i/5)*.7, 12.8+Math.sin(i/5)*.7, 2));
-  mkLine('c-volt', diasLbl, [{label:'Voltaje batería (V)', data:batD, color:'#BCCF00', dash:[]}]);
-
-  const prdD = dias.map(() => Rf(.002, .018, 6));
-  const cnsD = prdD.map(v => +(v*.76 + Rf(0,.002,6)).toFixed(6));
-  mkBar('c-ener', diasLbl, [{label:'Producción kWh',data:prdD,bg:'#BCCF00'},{label:'Consumo kWh',data:cnsD,bg:'#e87040'}]);
-
-  const tmpD = dias.map((_,i) => Rf(22+Math.sin(i/7)*5, 32+Math.sin(i/7)*5, 1));
-  const humD = dias.map((_,i) => Rf(50+Math.cos(i/7)*12,72+Math.cos(i/7)*12,1));
-  mkDual('c-amb', diasLbl, tmpD, humD);
-
-  const demo = [
+  const demo=[
     {device_id:'101',prod_kwh:.0386,cons_kwh:.0294,usuarios:743,bat_pct:85},
     {device_id:'102',prod_kwh:.0321,cons_kwh:.0278,usuarios:590,bat_pct:62},
     {device_id:'201',prod_kwh:.0225,cons_kwh:.0210,usuarios:280,bat_pct:38},
@@ -692,20 +597,13 @@ function renderDemo() {
     {device_id:'302',prod_kwh:.0152,cons_kwh:.0189,usuarios:102,bat_pct:18},
     {device_id:'401',prod_kwh:.0301,cons_kwh:.0248,usuarios:580,bat_pct:66},
   ];
-  const demoMap = {};
-  demo.forEach(d => demoMap[d.device_id] = d);
-
-  const demoEnriq = demo.map(d => ({
-    ...d,
-    qr:   qrMap[d.device_id]   || 0,
-    resp: respMap[d.device_id] || 0,
-  }));
-  const filt = dev==='Todos' ? demoEnriq : demoEnriq.filter(d => d.device_id===dev);
-  setTabla(filt); setStatus(filt);
+  const dE=demo.map(d=>({...d,qr:qrMap[d.device_id]||0,resp:respMap[d.device_id]||0}));
+  const dF=dev==='Todos'?dE:dE.filter(d=>d.device_id===dev);
+  setTabla(dF); setStatus(dF);
 }
 
 /* ════════════════════════════════════════════
-   HELPERS RENDER
+   RENDER HELPERS
 ════════════════════════════════════════════ */
 const fv = v => (v !== null && v !== undefined && v !== '') ? v : '—';
 
@@ -766,18 +664,15 @@ function setStatus(rows) {
         <span class="sbadge ${bcls}">${bst}</span>
       </div>
       <div class="br"><span class="br-lbl">Batería</span>
-        <div class="br-bg"><div class="br-fill"
-          style="width:${bat}%;background:${bCol};"></div></div>
+        <div class="br-bg"><div class="br-fill" style="width:${bat}%;background:${bCol};"></div></div>
         <span class="br-val">${bat}%</span>
       </div>
       <div class="br"><span class="br-lbl">Eficiencia</span>
-        <div class="br-bg"><div class="br-fill"
-          style="width:${Math.min(eff,100)}%;background:#BCCF00;"></div></div>
+        <div class="br-bg"><div class="br-fill" style="width:${Math.min(eff,100)}%;background:#BCCF00;"></div></div>
         <span class="br-val">${eff}%</span>
       </div>
       <div class="br"><span class="br-lbl">Usuarios</span>
-        <div class="br-bg"><div class="br-fill"
-          style="width:${Math.min(us,200)*.5}%;background:#3ea8c8;"></div></div>
+        <div class="br-bg"><div class="br-fill" style="width:${Math.min(us,200)*.5}%;background:#3ea8c8;"></div></div>
         <span class="br-val">${us}</span>
       </div>
     </div>`;
@@ -796,15 +691,9 @@ function mkBar(id, labels, datasets) {
   kill(id);
   charts[id] = new Chart(document.getElementById(id), {
     type:'bar',
-    data:{labels, datasets:datasets.map(d => ({
-      label:d.label, data:d.data, backgroundColor:d.bg, borderRadius:3
-    }))},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:GO, ticks:{...TK, autoSkip:true, maxRotation:45, maxTicksLimit:20}},
-        y:{grid:GO, ticks:TK}
-      }}
+    data:{labels, datasets:datasets.map(d=>({label:d.label,data:d.data,backgroundColor:d.bg,borderRadius:3}))},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:GO,ticks:{...TK,autoSkip:true,maxRotation:45,maxTicksLimit:20}},y:{grid:GO,ticks:TK}}}
   });
 }
 
@@ -812,17 +701,12 @@ function mkLine(id, labels, datasets) {
   kill(id);
   charts[id] = new Chart(document.getElementById(id), {
     type:'line',
-    data:{labels, datasets:datasets.map(d => ({
-      label:d.label, data:d.data, borderColor:d.color,
-      backgroundColor:d.color+'22', fill:true, tension:.35,
-      pointRadius:2, borderDash:d.dash||[]
+    data:{labels, datasets:datasets.map(d=>({
+      label:d.label,data:d.data,borderColor:d.color,
+      backgroundColor:d.color+'22',fill:true,tension:.35,pointRadius:2,borderDash:d.dash||[]
     }))},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:GO, ticks:{...TK, autoSkip:true, maxRotation:45, maxTicksLimit:20}},
-        y:{grid:GO, ticks:TK}
-      }}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:GO,ticks:{...TK,autoSkip:true,maxRotation:45,maxTicksLimit:20}},y:{grid:GO,ticks:TK}}}
   });
 }
 
@@ -831,19 +715,14 @@ function mkDual(id, labels, tD, hD) {
   charts[id] = new Chart(document.getElementById(id), {
     type:'line',
     data:{labels, datasets:[
-      {label:'Temperatura', data:tD, borderColor:'#e87040',
-        backgroundColor:'rgba(232,112,64,.08)', fill:true, tension:.4, pointRadius:2, yAxisID:'y'},
-      {label:'Humedad',     data:hD, borderColor:'#3ea8c8',
-        backgroundColor:'rgba(62,168,200,.08)',  fill:true, tension:.4, pointRadius:2, yAxisID:'y2'},
+      {label:'Temperatura',data:tD,borderColor:'#e87040',backgroundColor:'rgba(232,112,64,.08)',fill:true,tension:.4,pointRadius:2,yAxisID:'y'},
+      {label:'Humedad',    data:hD,borderColor:'#3ea8c8',backgroundColor:'rgba(62,168,200,.08)', fill:true,tension:.4,pointRadius:2,yAxisID:'y2'},
     ]},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
       scales:{
-        x: {grid:GO, ticks:{...TK, autoSkip:true, maxTicksLimit:20}},
-        y: {grid:GO, ticks:TK, position:'left',  min:10, max:50,
-          title:{display:true, text:'°C', color:TC, font:{size:9}}},
-        y2:{grid:{display:false}, ticks:TK, position:'right', min:20, max:100,
-          title:{display:true, text:'%',  color:TC, font:{size:9}}}
+        x: {grid:GO,ticks:{...TK,autoSkip:true,maxTicksLimit:20}},
+        y: {grid:GO,ticks:TK,position:'left', min:10,max:50, title:{display:true,text:'°C',color:TC,font:{size:9}}},
+        y2:{grid:{display:false},ticks:TK,position:'right',min:20,max:100,title:{display:true,text:'%',color:TC,font:{size:9}}}
       }}
   });
 }
@@ -854,7 +733,6 @@ function mkDual(id, labels, tD, hD) {
 ['sel-dev','d-start','d-end'].forEach(id =>
   document.getElementById(id).addEventListener('change', cargar)
 );
-// Cerrar config al hacer clic fuera del box
 document.getElementById('cfg-overlay').addEventListener('click', function(e){
   if (e.target === this) this.classList.remove('open');
 });
