@@ -331,13 +331,26 @@
    ▼▼▼  ÚNICA LÍNEA QUE DEBES EDITAR  ▼▼▼
    Pega aquí la URL de tu Apps Script desplegado
 ════════════════════════════════════════════ */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTNVsTcJ_JBDzAHGsDaxpTLn_LH1HQmMdQobwZy_hS7OgbrrSY4coQOiBtSOrVDuMPvw/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkyied4JWzItysTsMzBqkOjMQfAklgjxmqpEczeNRK4tkCOAiQUzKuHM_u9m6jMcS9Hg/exec";
+
+/* ════════════════════════════════════════════
+   MAPA DE CLIENTES POR DISPOSITIVO
+════════════════════════════════════════════ */
+const CLIENTES = {
+  '101': 'Parque Irekua',
+  '102': 'Parque Irekua',
+  '201': 'La Caldera',
+  '301': 'Mobil (Bravos)',
+  '302': 'Mobil (Bravos)',
+  '401': 'Bloque Inov y Crea',
+  'Todos': '—'
+};
 
 /* ════════════════════════════════════════════
    ESTADO GLOBAL
 ════════════════════════════════════════════ */
 const DEVS  = ['101','102','201','301','302','401'];
-let qrMap   = {};
+let qrMap   = {};   // QR desde BigQuery por dispositivo (null = aún no cargado)
 let respMap = {};
 let refMin  = 5;
 let isDemo  = false;
@@ -453,6 +466,16 @@ async function cargarReal() {
   if (data.error) throw new Error('Apps Script: ' + data.error);
 
   console.log('📦 BigQuery →', data);
+
+  // Poblar qrMap desde los datos de qr_scans devueltos por el Apps Script
+  const qrRows = data.qrScans || [];
+  DEVS.forEach(d => qrMap[d] = 0);  // reset
+  qrRows.forEach(r => {
+    if (r.device_id && r.total_registros !== null) {
+      qrMap[String(r.device_id)] = parseInt(r.total_registros) || 0;
+    }
+  });
+
   renderTodo(data, dev, start, end);
 }
 
@@ -476,8 +499,11 @@ function renderTodo(data, dev, start, end) {
   const iniStr = start.split('-').reverse().join('/');
   const finStr = end.split('-').reverse().join('/');
 
+  const clienteNombre = CLIENTES[dev] || '—';
+
   setKpis('kpi-main', [
     {lbl:'Número de dispositivo',  val:dev,                       unit:'',                         ico:'📡', ac:'#65A428'},
+    {lbl:'Cliente',                val:clienteNombre,             unit:'',                         ico:'🏢', ac:'#65A428'},
     {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),  unit:'total en periodo',         ico:'⬛', ac:'#BCCF00'},
     {lbl:'Respuestas registradas', val:respTotal.toLocaleString(),unit:'total en periodo',         ico:'📋', ac:'#65A428'},
     {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(), unit:'veces que supera 0.4 A',  ico:'👤', ac:'#BCCF00'},
@@ -552,6 +578,7 @@ function renderDemo() {
 
   setKpis('kpi-main',[
     {lbl:'Número de dispositivo',  val:dev,                        unit:'',                        ico:'📡',ac:'#65A428'},
+    {lbl:'Cliente',                val:CLIENTES[dev]||'—',         unit:'',                        ico:'🏢',ac:'#65A428'},
     {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),   unit:'total en periodo',        ico:'⬛',ac:'#BCCF00'},
     {lbl:'Respuestas registradas', val:respTotal.toLocaleString(), unit:'total en periodo',        ico:'📋',ac:'#65A428'},
     {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(),  unit:'veces que supera 0.4 A', ico:'👤',ac:'#BCCF00'},
