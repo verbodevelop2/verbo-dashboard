@@ -102,6 +102,7 @@
     .sc-name{font-size:12px;color:#fff;font-weight:500;}
     .sbadge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
     .s-ok{background:#1a4a3a;color:#BCCF00;}
+    .s-excel{background:#1a4a3a;color:#3ea8c8;}  /* Excelente */
     .s-warn{background:#3a2a0a;color:#e8b84b;}
     .s-bad{background:#3a1010;color:#e27070;}
     .br{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
@@ -331,7 +332,7 @@
    ▼▼▼  ÚNICA LÍNEA QUE DEBES EDITAR  ▼▼▼
    Pega aquí la URL de tu Apps Script desplegado
 ════════════════════════════════════════════ */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkyied4JWzItysTsMzBqkOjMQfAklgjxmqpEczeNRK4tkCOAiQUzKuHM_u9m6jMcS9Hg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyPlROOQBQLHc1jt_xNzskRMf6Gj8YbxgRgwMeb495njAMn0aRtL7pYnGQHBZBXqihBeQ/exec";
 
 /* ════════════════════════════════════════════
    MAPA DE CLIENTES POR DISPOSITIVO
@@ -617,12 +618,12 @@ function renderDemo() {
   mkDual('c-amb',diasLbl,tmpD,humD);
 
   const demo=[
-    {device_id:'101',prod_kwh:.0386,cons_kwh:.0294,usuarios:743,bat_pct:85},
-    {device_id:'102',prod_kwh:.0321,cons_kwh:.0278,usuarios:590,bat_pct:62},
-    {device_id:'201',prod_kwh:.0225,cons_kwh:.0210,usuarios:280,bat_pct:38},
-    {device_id:'301',prod_kwh:.0352,cons_kwh:.0289,usuarios:864,bat_pct:90},
-    {device_id:'302',prod_kwh:.0152,cons_kwh:.0189,usuarios:102,bat_pct:18},
-    {device_id:'401',prod_kwh:.0301,cons_kwh:.0248,usuarios:580,bat_pct:66},
+    {device_id:'101',prod_kwh:.0386,cons_kwh:.0294,usuarios:743,bat_pct:12.1,avg_bat:12.1},
+    {device_id:'102',prod_kwh:.0321,cons_kwh:.0278,usuarios:590,bat_pct:11.9,avg_bat:11.9},
+    {device_id:'201',prod_kwh:.0225,cons_kwh:.0210,usuarios:280,bat_pct:11.5,avg_bat:11.5},
+    {device_id:'301',prod_kwh:.0352,cons_kwh:.0289,usuarios:864,bat_pct:12.4,avg_bat:12.4},
+    {device_id:'302',prod_kwh:.0152,cons_kwh:.0189,usuarios:102,bat_pct:10.8,avg_bat:10.8},
+    {device_id:'401',prod_kwh:.0301,cons_kwh:.0248,usuarios:580,bat_pct:11.1,avg_bat:11.1},
   ];
   const dE=demo.map(d=>({...d,qr:qrMap[d.device_id]||0,resp:respMap[d.device_id]||0}));
   const dF=dev==='Todos'?dE:dE.filter(d=>d.device_id===dev);
@@ -633,6 +634,21 @@ function renderDemo() {
    RENDER HELPERS
 ════════════════════════════════════════════ */
 const fv = v => (v !== null && v !== undefined && v !== '') ? v : '—';
+
+/* ════════════════════════════════════════════
+   ESTADO DE BATERÍA POR VOLTAJE REAL
+   > 11.8 V  → Excelente
+   11.3–11.8  → Óptimo
+   11.0–11.2  → Bajo
+   < 11.0     → Crítico
+════════════════════════════════════════════ */
+function batEstado(v) {
+  const volt = parseFloat(v) || 0;
+  if (volt > 11.8)  return { lbl:'Excelente', cls:'s-excel', col:'#3ea8c8' };
+  if (volt >= 11.3) return { lbl:'Óptimo',    cls:'s-ok',    col:'#65A428' };
+  if (volt >= 11.0) return { lbl:'Bajo',       cls:'s-warn',  col:'#e8b84b' };
+  return               { lbl:'Crítico',    cls:'s-bad',   col:'#e27070' };
+}
 
 function setKpis(id, kpis) {
   const g = document.getElementById(id);
@@ -654,12 +670,12 @@ function setTabla(rows) {
     const prod = parseFloat(d.prod_kwh)||0;
     const cons = parseFloat(d.cons_kwh)||0;
     const eff  = prod > 0 ? Math.round(cons/prod*100) : 0;
-    const bat  = Math.min(100,Math.max(0,Math.round(parseFloat(d.bat_pct)||0)));
+    // bat_pct = voltaje promedio real devuelto por Apps Script
+    const voltBat = parseFloat(d.bat_pct) || parseFloat(d.avg_bat) || 0;
+    const { lbl: bst, cls: bcls } = batEstado(voltBat);
     const us   = parseInt(d.usuarios)||0;
     const qr   = parseInt(d.qr)   || qrMap[d.device_id]   || 0;
     const resp = parseInt(d.resp) || respMap[d.device_id] || 0;
-    const bst  = bat>60?'Óptimo':bat>30?'Bajo':'Crítico';
-    const bcls = bat>60?'s-ok':bat>30?'s-warn':'s-bad';
     tbody.innerHTML += `<tr>
       <td style="color:#BCCF00;font-weight:600;">${d.device_id}</td>
       <td>${qr.toLocaleString()}</td>
@@ -668,7 +684,7 @@ function setTabla(rows) {
       <td>${prod.toFixed(4)}</td>
       <td>${cons.toFixed(4)}</td>
       <td><span class="ebar" style="width:${Math.min(eff,100)*.5}px;"></span>${eff}%</td>
-      <td><span class="sbadge ${bcls}">${bst} (${bat}%)</span></td>
+      <td><span class="sbadge ${bcls}">${bst} (${voltBat.toFixed(1)}V)</span></td>
     </tr>`;
   });
 }
@@ -677,22 +693,20 @@ function setStatus(rows) {
   const g = document.getElementById('sgrid');
   g.innerHTML = '';
   rows.forEach(d => {
-    const bat  = Math.min(100,Math.max(0,Math.round(parseFloat(d.bat_pct)||0)));
+    const voltBat2 = parseFloat(d.bat_pct) || parseFloat(d.avg_bat) || 0;
+    const { lbl: bst, cls: bcls, col: bCol } = batEstado(voltBat2);
     const prod = parseFloat(d.prod_kwh)||0;
     const cons = parseFloat(d.cons_kwh)||0;
     const eff  = prod > 0 ? Math.round(cons/prod*100) : 0;
     const us   = parseInt(d.usuarios)||0;
-    const bst  = bat>60?'Óptimo':bat>30?'Bajo':'Crítico';
-    const bcls = bat>60?'s-ok':bat>30?'s-warn':'s-bad';
-    const bCol = bat>60?'#65A428':bat>30?'#e8b84b':'#e27070';
     g.innerHTML += `<div class="sc">
       <div class="sc-hdr">
         <div class="sc-name">Banca ${d.device_id}</div>
         <span class="sbadge ${bcls}">${bst}</span>
       </div>
       <div class="br"><span class="br-lbl">Batería</span>
-        <div class="br-bg"><div class="br-fill" style="width:${bat}%;background:${bCol};"></div></div>
-        <span class="br-val">${bat}%</span>
+        <div class="br-bg"><div class="br-fill" style="width:${Math.min(100,Math.max(0,Math.round((voltBat2-10)/(13-10)*100)))}%;background:${bCol};"></div></div>
+        <span class="br-val">${voltBat2.toFixed(1)}V</span>
       </div>
       <div class="br"><span class="br-lbl">Eficiencia</span>
         <div class="br-bg"><div class="br-fill" style="width:${Math.min(eff,100)}%;background:#BCCF00;"></div></div>
