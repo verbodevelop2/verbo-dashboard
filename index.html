@@ -332,7 +332,7 @@
    ▼▼▼  ÚNICA LÍNEA QUE DEBES EDITAR  ▼▼▼
    Pega aquí la URL de tu Apps Script desplegado
 ════════════════════════════════════════════ */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyPlROOQBQLHc1jt_xNzskRMf6Gj8YbxgRgwMeb495njAMn0aRtL7pYnGQHBZBXqihBeQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOaXWRMmIU5p08Q2sw0h8TjfOtVV14WvsaNNviDboJiiJx2XUm1Oe3ReBLqG3jb1oR/exec";
 
 /* ════════════════════════════════════════════
    MAPA DE CLIENTES POR DISPOSITIVO
@@ -468,9 +468,9 @@ async function cargarReal() {
 
   console.log('📦 BigQuery →', data);
 
-  // Poblar qrMap desde los datos de qr_scans devueltos por el Apps Script
+  // Poblar qrMap (totales) desde qr_scans
   const qrRows = data.qrScans || [];
-  DEVS.forEach(d => qrMap[d] = 0);  // reset
+  DEVS.forEach(d => qrMap[d] = 0);
   qrRows.forEach(r => {
     if (r.device_id && r.total_registros !== null) {
       qrMap[String(r.device_id)] = parseInt(r.total_registros) || 0;
@@ -535,8 +535,18 @@ function renderTodo(data, dev, start, end) {
   const tlMap  = {};  tl.forEach(t  => { if(t.dia)  tlMap[t.dia]  = t; });
   const epdMap = {};  epd.forEach(e => { if(e.dia)  epdMap[e.dia] = e; });
 
-  const n       = diasAll.length || 1;
-  const qrDia   = diasAll.map(() => Math.round(qrTotal   / n));
+  // Mapa de QR reales por día desde BigQuery (qrPorDia)
+  const qrDiaMap = {};
+  (data.qrPorDia || []).forEach(r => { if(r.dia) qrDiaMap[r.dia] = parseInt(r.qr_dia)||0; });
+
+  // QR por día: si hay datos reales de qr_scans los usamos; si no, distribuimos uniformemente
+  const hayQrDia = Object.keys(qrDiaMap).length > 0;
+  const n        = diasAll.length || 1;
+  const qrDia    = hayQrDia
+    ? diasAll.map(d => qrDiaMap[d] || 0)
+    : diasAll.map(() => Math.round(qrTotal / n));
+
+  // Respuestas por día: usamos respMap distribuido uniformemente (es dato manual)
   const respDia = diasAll.map(() => Math.round(respTotal / n));
   const uDia    = diasAll.map(d => parseInt((tlMap[d]||{}).usuarios_dia)||0);
   const batDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_bat)  || 0);
