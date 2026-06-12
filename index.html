@@ -332,7 +332,7 @@
    ▼▼▼  ÚNICA LÍNEA QUE DEBES EDITAR  ▼▼▼
    Pega aquí la URL de tu Apps Script desplegado
 ════════════════════════════════════════════ */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOaXWRMmIU5p08Q2sw0h8TjfOtVV14WvsaNNviDboJiiJx2XUm1Oe3ReBLqG3jb1oR/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8IJ9JdDrj92Xe-aM96_ZVX9x8-YfT-Z2wwMvm0QhNNOuYXCXMUZiJy7oHfhzCTquFsg/exec";
 
 /* ════════════════════════════════════════════
    MAPA DE CLIENTES POR DISPOSITIVO
@@ -477,6 +477,15 @@ async function cargarReal() {
     }
   });
 
+  // Poblar respMap (totales) desde respuestas_registradas
+  const respRows = data.respTotal || [];
+  DEVS.forEach(d => respMap[d] = 0);
+  respRows.forEach(r => {
+    if (r.device_id && r.total_solicitudes !== null) {
+      respMap[String(r.device_id)] = parseInt(r.total_solicitudes) || 0;
+    }
+  });
+
   renderTodo(data, dev, start, end);
 }
 
@@ -535,31 +544,43 @@ function renderTodo(data, dev, start, end) {
   const tlMap  = {};  tl.forEach(t  => { if(t.dia)  tlMap[t.dia]  = t; });
   const epdMap = {};  epd.forEach(e => { if(e.dia)  epdMap[e.dia] = e; });
 
-  // Mapa de QR reales por día desde BigQuery (qrPorDia)
+  // ── Mapa de QR reales por día (desde qr_scans) ──
   const qrDiaMap = {};
   (data.qrPorDia || []).forEach(r => { if(r.dia) qrDiaMap[r.dia] = parseInt(r.qr_dia)||0; });
-
-  // QR por día: si hay datos reales de qr_scans los usamos; si no, distribuimos uniformemente
   const hayQrDia = Object.keys(qrDiaMap).length > 0;
-  const n        = diasAll.length || 1;
-  const qrDia    = hayQrDia
-    ? diasAll.map(d => qrDiaMap[d] || 0)
-    : diasAll.map(() => Math.round(qrTotal / n));
 
-  // Respuestas por día: usamos respMap distribuido uniformemente (es dato manual)
-  const respDia = diasAll.map(() => Math.round(respTotal / n));
-  const uDia    = diasAll.map(d => parseInt((tlMap[d]||{}).usuarios_dia)||0);
-  const batDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_bat)  || 0);
-  const prdDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).prod_kwh) || 0);
-  const cnsDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).cons_kwh) || 0);
-  const tmpDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_temp) || 0);
-  const humDia  = diasAll.map(d => parseFloat((epdMap[d]||{}).avg_hum)  || 0);
+  // ── Mapa de Respuestas reales por día (desde respuestas_registradas) ──
+  const respDiaMap = {};
+  (data.respPorDia || []).forEach(r => { if(r.dia) respDiaMap[r.dia] = parseInt(r.resp_dia)||0; });
+  const hayRespDia = Object.keys(respDiaMap).length > 0;
 
-  mkBar('c-qr',   diasLbl, [{label:'Escaneos QR',data:qrDia,bg:'#BCCF00'},{label:'Respuestas',data:respDia,bg:'#65A428'}]);
-  mkLine('c-users',diasLbl, [{label:'Respuestas',data:respDia,color:'#65A428',dash:[4,4]},{label:'Usuarios',data:uDia,color:'#3ea8c8',dash:[]}]);
-  mkLine('c-volt', diasLbl, [{label:'Voltaje (V)',data:batDia,color:'#BCCF00',dash:[]}]);
-  mkBar('c-ener',  diasLbl, [{label:'Producción kWh',data:prdDia,bg:'#BCCF00'},{label:'Consumo kWh',data:cnsDia,bg:'#e87040'}]);
-  mkDual('c-amb',  diasLbl, tmpDia, humDia);
+  // Incluir días de respPorDia en el eje X (por si hay días con respuestas sin telemetría)
+  (data.respPorDia || []).forEach(r => { if(r.dia) diasSet.add(r.dia); });
+  // Re-ordenar diasAll por si se agregaron nuevos días
+  const diasAllFinal = [...new Set([...diasAll, ...(data.respPorDia||[]).map(r=>r.dia||"")])]
+                         .filter(Boolean).sort();
+  const diasLblFinal = diasAllFinal.map(d => d.length >= 10 ? d.substring(5) : d);
+
+  const n       = diasAllFinal.length || 1;
+  const qrDia   = hayQrDia
+    ? diasAllFinal.map(d => qrDiaMap[d] || 0)
+    : diasAllFinal.map(() => Math.round(qrTotal / n));
+
+  const respDia = hayRespDia
+    ? diasAllFinal.map(d => respDiaMap[d] || 0)
+    : diasAllFinal.map(() => Math.round(respTotal / n));
+  const uDia    = diasAllFinal.map(d => parseInt((tlMap[d]||{}).usuarios_dia)||0);
+  const batDia  = diasAllFinal.map(d => parseFloat((epdMap[d]||{}).avg_bat)  || 0);
+  const prdDia  = diasAllFinal.map(d => parseFloat((epdMap[d]||{}).prod_kwh) || 0);
+  const cnsDia  = diasAllFinal.map(d => parseFloat((epdMap[d]||{}).cons_kwh) || 0);
+  const tmpDia  = diasAllFinal.map(d => parseFloat((epdMap[d]||{}).avg_temp) || 0);
+  const humDia  = diasAllFinal.map(d => parseFloat((epdMap[d]||{}).avg_hum)  || 0);
+
+  mkBar('c-qr',   diasLblFinal, [{label:'Escaneos QR',data:qrDia,bg:'#BCCF00'},{label:'Respuestas',data:respDia,bg:'#65A428'}]);
+  mkLine('c-users',diasLblFinal, [{label:'Respuestas',data:respDia,color:'#65A428',dash:[4,4]},{label:'Usuarios',data:uDia,color:'#3ea8c8',dash:[]}]);
+  mkLine('c-volt', diasLblFinal, [{label:'Voltaje (V)',data:batDia,color:'#BCCF00',dash:[]}]);
+  mkBar('c-ener',  diasLblFinal, [{label:'Producción kWh',data:prdDia,bg:'#BCCF00'},{label:'Consumo kWh',data:cnsDia,bg:'#e87040'}]);
+  mkDual('c-amb',  diasLblFinal, tmpDia, humDia);
 
   const pdE = pd.map(d => ({...d, qr:qrMap[d.device_id]||0, resp:respMap[d.device_id]||0}));
   const pdF = dev === 'Todos' ? pdE : pdE.filter(d => d.device_id === dev);
