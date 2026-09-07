@@ -227,15 +227,15 @@
 
   <div class="fbar">
     <div style="display:flex;align-items:center;gap:6px;">
+      <span class="flbl">Cliente</span>
+      <select class="fsel" id="sel-client">
+        <option value="Todos" selected>Todos los clientes</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
       <span class="flbl">Dispositivo</span>
-      <select class="fsel" id="sel-dev">
-        <option value="Todos">Todos</option>
-        <option value="101">101</option>
-        <option value="102">102</option>
-        <option value="201">201</option>
-        <option value="301">301</option>
-        <option value="302">302</option>
-        <option value="401">401</option>
+      <select class="fsel" id="sel-dev" disabled>
+        <option value="">Selecciona primero un cliente</option>
       </select>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
@@ -336,20 +336,22 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVcopVl8K-Xjs8
 /* ════════════════════════════════════════════
    MAPA DE CLIENTES POR DISPOSITIVO
 ════════════════════════════════════════════ */
-const CLIENTES = {
-  '101': 'Parque Irekua',
-  '102': 'Parque Irekua',
-  '201': 'La Caldera',
-  '301': 'Mobil (Bravos)',
-  '302': 'Mobil (Bravos)',
-  '401': 'Bloque Inov y Crea',
-  'Todos': '—'
+const DISPOSITIVOS_POR_CLIENTE = {
+  'Parque Irekua': ['101', '102'],
+  'La Caldera': ['201'],
+  'Mobil (Bravos)': ['301', '302'],
+  'Bloque Inov y Crea': ['400', '401', '402', '403', '404', '405', '406', '407', '408', '409', '410'],
+  'Universidad Anáhuac': ['500'],
 };
+const CLIENTES = Object.fromEntries(
+  Object.entries(DISPOSITIVOS_POR_CLIENTE)
+    .flatMap(([cliente, dispositivos]) => dispositivos.map(d => [d, cliente]))
+);
+const DEVS = Object.values(DISPOSITIVOS_POR_CLIENTE).flat();
 
 /* ════════════════════════════════════════════
    ESTADO GLOBAL
 ════════════════════════════════════════════ */
-const DEVS  = ['101','102','201','301','302','401'];
 let qrMap   = {};   // QR desde BigQuery por dispositivo (null = aún no cargado)
 let respMap = {};
 let refMin  = 5;
@@ -362,6 +364,9 @@ DEVS.forEach(d => { qrMap[d] = 0; respMap[d] = 0; });
    INIT
 ════════════════════════════════════════════ */
 window.onload = () => {
+  cargarClientes();
+  actualizarDispositivos();
+
   // Fechas por defecto: últimos 30 días
   const hoy = new Date(), h30 = new Date();
   h30.setDate(hoy.getDate() - 30);
@@ -394,6 +399,34 @@ window.onload = () => {
 };
 
 const iso = d => d.toISOString().split('T')[0];
+
+function cargarClientes() {
+  const select = document.getElementById('sel-client');
+  Object.keys(DISPOSITIVOS_POR_CLIENTE).forEach(cliente => {
+    select.insertAdjacentHTML('beforeend', `<option value="${cliente}">${cliente}</option>`);
+  });
+}
+
+function actualizarDispositivos() {
+  const cliente = document.getElementById('sel-client').value;
+  const select = document.getElementById('sel-dev');
+  const dispositivos = cliente === 'Todos' ? DEVS : DISPOSITIVOS_POR_CLIENTE[cliente] || [];
+  select.disabled = !cliente;
+  select.innerHTML = cliente
+    ? '<option value="" disabled selected>Selecciona un dispositivo</option>'
+    : '<option value="">Selecciona primero un cliente</option>';
+  if (cliente === 'Todos') {
+    select.insertAdjacentHTML('beforeend', '<option value="Todos">Todos los dispositivos</option>');
+  }
+  dispositivos.forEach(dispositivo => {
+    select.insertAdjacentHTML('beforeend', `<option value="${dispositivo}">${dispositivo}</option>`);
+  });
+  if (cliente === 'Todos') select.value = 'Todos';
+  if (cliente !== 'Todos') {
+    select.insertAdjacentHTML('afterbegin', '<option value="Todos">Todos los dispositivos</option>');
+    select.value = 'Todos';
+  }
+}
 
 /* ════════════════════════════════════════════
    CONFIG  (solo QR / Respuestas)
@@ -436,6 +469,8 @@ function startTimer() {
    CARGA PRINCIPAL
 ════════════════════════════════════════════ */
 async function cargar() {
+  if (!document.getElementById('sel-dev').value) return;
+
   const btn = document.getElementById('btn-rel');
   const bar = document.getElementById('lbar');
   btn.disabled = true; bar.classList.add('on');
@@ -496,19 +531,32 @@ function renderTodo(data, dev, start, end) {
   const tl  = data.timeline       || [];
   const epd = data.energiaPorDia  || [];
   const pd  = data.porDispositivo || [];
+  const cliente = document.getElementById('sel-client').value;
+  const dispositivosCliente = cliente === 'Todos' ? DEVS : DISPOSITIVOS_POR_CLIENTE[cliente] || [];
+  const dispositivosSeleccionados = dev === 'Todos' ? dispositivosCliente : [dev];
+  const pdE = pd.map(d => ({...d, qr:qrMap[d.device_id]||0, resp:respMap[d.device_id]||0}));
+  const pdF = pdE.filter(d => dispositivosSeleccionados.includes(String(d.device_id)));
 
-  const usuarios = parseInt(r.sesiones_usuario) || 0;
-  const prodKwh  = parseFloat(r.produccion_kwh) || 0;
-  const consKwh  = parseFloat(r.consumo_kwh)    || 0;
+  const usuarios = dev === 'Todos'
+    ? pdF.reduce((sum, d) => sum + (parseInt(d.usuarios) || 0), 0)
+    : parseInt(r.sesiones_usuario) || 0;
+  const prodKwh  = dev === 'Todos'
+    ? pdF.reduce((sum, d) => sum + (parseFloat(d.prod_kwh) || 0), 0)
+    : parseFloat(r.produccion_kwh) || 0;
+  const consKwh  = dev === 'Todos'
+    ? pdF.reduce((sum, d) => sum + (parseFloat(d.cons_kwh) || 0), 0)
+    : parseFloat(r.consumo_kwh) || 0;
   const efic     = prodKwh > 0 ? Math.round(consKwh / prodKwh * 100) : 0;
 
-  const qrTotal   = dev === 'Todos' ? DEVS.reduce((s,k) => s+(qrMap[k]||0),   0) : (qrMap[dev]||0);
-  const respTotal = dev === 'Todos' ? DEVS.reduce((s,k) => s+(respMap[k]||0), 0) : (respMap[dev]||0);
+  const qrTotal   = dispositivosSeleccionados.reduce((sum, dispositivo) => sum + (qrMap[dispositivo] || 0), 0);
+  const respTotal = dispositivosSeleccionados.reduce((sum, dispositivo) => sum + (respMap[dispositivo] || 0), 0);
 
   const iniStr = start.split('-').reverse().join('/');
   const finStr = end.split('-').reverse().join('/');
 
-  const clienteNombre = CLIENTES[dev] || '—';
+  const clienteNombre = dev === 'Todos'
+    ? (cliente === 'Todos' ? 'Todos los clientes' : cliente)
+    : CLIENTES[dev] || '—';
 
   setKpis('kpi-main', [
     {lbl:'Número de dispositivo',  val:dev,                       unit:'',                         ico:'📡', ac:'#65A428'},
@@ -581,8 +629,6 @@ function renderTodo(data, dev, start, end) {
   mkBar('c-ener',  diasLblFinal, [{label:'Producción kWh',data:prdDia,bg:'#BCCF00'},{label:'Consumo kWh',data:cnsDia,bg:'#e87040'}]);
   mkDual('c-amb',  diasLblFinal, tmpDia, humDia);
 
-  const pdE = pd.map(d => ({...d, qr:qrMap[d.device_id]||0, resp:respMap[d.device_id]||0}));
-  const pdF = dev === 'Todos' ? pdE : pdE.filter(d => d.device_id === dev);
   setTabla(pdF); setStatus(pdF);
 }
 
@@ -593,6 +639,8 @@ function renderDemo() {
   const R  = (a,b) => Math.round(Math.random()*(b-a)+a);
   const Rf = (a,b,n) => +(Math.random()*(b-a)+a).toFixed(n);
   const dev   = document.getElementById('sel-dev').value;
+  const cliente = document.getElementById('sel-client').value;
+  const dispositivosCliente = cliente === 'Todos' ? DEVS : DISPOSITIVOS_POR_CLIENTE[cliente] || [];
   const start = document.getElementById('d-start').value;
   const end   = document.getElementById('d-end').value;
 
@@ -609,7 +657,9 @@ function renderDemo() {
 
   setKpis('kpi-main',[
     {lbl:'Número de dispositivo',  val:dev,                        unit:'',                        ico:'📡',ac:'#65A428'},
-    {lbl:'Cliente',                val:CLIENTES[dev]||'—',         unit:'',                        ico:'🏢',ac:'#65A428'},
+    {lbl:'Cliente',                val:dev === 'Todos'
+      ? (cliente === 'Todos' ? 'Todos los clientes' : cliente)
+      : CLIENTES[dev] || '—',                                  unit:'',                        ico:'🏢',ac:'#65A428'},
     {lbl:'Escaneos QR',            val:qrTotal.toLocaleString(),   unit:'total en periodo',        ico:'⬛',ac:'#BCCF00'},
     {lbl:'Respuestas registradas', val:respTotal.toLocaleString(), unit:'total en periodo',        ico:'📋',ac:'#65A428'},
     {lbl:'Usuarios conectados',    val:usuarios.toLocaleString(),  unit:'veces que supera 0.4 A', ico:'👤',ac:'#BCCF00'},
@@ -656,7 +706,8 @@ function renderDemo() {
     {device_id:'401',prod_kwh:.0301,cons_kwh:.0248,usuarios:580,bat_pct:11.1,avg_bat:11.1},
   ];
   const dE=demo.map(d=>({...d,qr:qrMap[d.device_id]||0,resp:respMap[d.device_id]||0}));
-  const dF=dev==='Todos'?dE:dE.filter(d=>d.device_id===dev);
+  const dF=dE.filter(d => (dev === 'Todos' ? dispositivosCliente : [dev])
+    .includes(String(d.device_id)));
   setTabla(dF); setStatus(dF);
 }
 
@@ -801,6 +852,10 @@ function mkDual(id, labels, tD, hD) {
 /* ════════════════════════════════════════════
    LISTENERS
 ════════════════════════════════════════════ */
+document.getElementById('sel-client').addEventListener('change', () => {
+  actualizarDispositivos();
+  cargar();
+});
 ['sel-dev','d-start','d-end'].forEach(id =>
   document.getElementById(id).addEventListener('change', cargar)
 );
