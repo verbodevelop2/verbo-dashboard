@@ -534,9 +534,18 @@ function renderTodo(data, dev, start, end) {
   const cliente = document.getElementById('sel-client').value;
   const dispositivosCliente = cliente === 'Todos' ? DEVS : DISPOSITIVOS_POR_CLIENTE[cliente] || [];
   const dispositivosSeleccionados = dev === 'Todos' ? dispositivosCliente : [dev];
-  const pdE = pd.map(d => ({...d, qr:qrMap[d.device_id]||0, resp:respMap[d.device_id]||0}));
-  const pdF = pdE.filter(d => dispositivosSeleccionados.includes(String(d.device_id)));
-
+  const pdF = dispositivosSeleccionados.map(devId => {
+    const telemetria = pd.find(d => String(d.device_id) === String(devId)) || {};
+    return {
+      device_id: devId,
+      prod_kwh: telemetria.prod_kwh || 0,
+      cons_kwh: telemetria.cons_kwh || 0,
+      usuarios: telemetria.usuarios || 0,
+      bat_pct: telemetria.bat_pct || telemetria.avg_bat || 0,
+      qr: qrMap[devId] || 0,
+      resp: respMap[devId] || 0
+    };
+  });
   const usuarios = dev === 'Todos'
     ? pdF.reduce((sum, d) => sum + (parseInt(d.usuarios) || 0), 0)
     : parseInt(r.sesiones_usuario) || 0;
